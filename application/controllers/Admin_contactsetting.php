@@ -21,7 +21,7 @@ class Admin_contactsetting extends CI_Controller {
 	public function index()
 	{
 		//settings data
-		$user_id 						= ($this->session->userdata('user_id_hotcargo')) ?  $this->session->userdata('user_id_hotcargo') : 0;
+		$user_id 						= ($this->session->userdata('user_id_lovearchitect')) ?  $this->session->userdata('user_id_lovearchitect') : 0;
 		$setting_data 					= $this->myaccount_model->get_account_data($user_id);
 		$data['data']['setting_data'] 	= $setting_data;
 		$data['data']['settings'] 		= $this->sitesetting_model->get_settings();
@@ -33,7 +33,7 @@ class Admin_contactsetting extends CI_Controller {
 	
 	public function updt()
 	{
-		$user_id 						= ($this->session->userdata('user_id_hotcargo')) ?  $this->session->userdata('user_id_hotcargo') : 0;
+		$user_id 						= ($this->session->userdata('user_id_lovearchitect')) ?  $this->session->userdata('user_id_lovearchitect') : 0;
 		
 		$this->load->library('form_validation');
 		//if save button was clicked, get the data sent via post
@@ -43,7 +43,7 @@ class Admin_contactsetting extends CI_Controller {
 			$this->form_validation->set_rules('contact_email', 'Contact Email', 'trim|required|valid_email');
 			$this->form_validation->set_rules('ph_no', 'Phone no', 'trim|required');
 			$this->form_validation->set_rules('fax', 'Fax', 'trim|required');
-			$this->form_validation->set_rules('address', 'Address', 'trim|required');
+			//$this->form_validation->set_rules('address', 'Address', 'trim|required');
 			$this->form_validation->set_error_delimiters('<div class="alert alert-error"><a class="close" data-dismiss="alert">x</a><strong>', '</strong></div>');
 		  
 			if ($this->form_validation->run())
@@ -52,7 +52,7 @@ class Admin_contactsetting extends CI_Controller {
 					'contact_email' 	=> $this->input->post('contact_email'),
 					'ph_no' 			=> $this->input->post('ph_no'),
 					'fax' 			=> $this->input->post('fax'),
-					'address' 		=> $this->input->post('address'),
+					//'address' 		=> $this->input->post('address'),
 				);
 				
 				if($this->contactsetting_model->update_settings($data_to_store, $user_id) == TRUE){
