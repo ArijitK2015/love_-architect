@@ -69,7 +69,7 @@
 								<div class="form-group ">
 									<label for="firstname" class="control-label col-lg-3">Site Favicon:</label>
 									<div class="col-lg-4">
-										<p><img src="<?php echo base_url().'assets/site/images/'.$settings[0]['site_fabicon'] ?>" alt="" /></p>
+										<p><img style="width: 250px;" src="<?php echo base_url().'assets/site/images/'.$settings[0]['site_fabicon'] ?>" alt="" /></p>
 										<input class=" form-control" name="site_fabicon" id="site_fabicon" value="" type="file" />
 									</div>
 								</div>
@@ -181,105 +181,11 @@
 									</div>
 								</div>
 								
-								<header class="panel-heading" style="margin-bottom: 20px;"> Linkedin App Settings </header>
-								<div class="form-group ">
-									<label for="lastname" class="control-label col-lg-3">Linkedin App Client ID:</label>
-									<div class="col-lg-4">
-										<input class=" form-control" name="linkedinApiKey" value="<?php echo $settings[0]['linkedinApiKey']; ?>" type="text" />
-									</div>
-								</div>
-								
-								<div class="form-group ">
-									<label for="lastname" class="control-label col-lg-3">Linkedin App Secret:</label>
-									<div class="col-lg-4">
-										<input class=" form-control" name="linkedinApiSecret" value="<?php echo $settings[0]['linkedinApiSecret']; ?>" type="text" />
-									</div>
-								</div>
-								
 								<header class="panel-heading" style="margin-bottom: 20px;"> Google Map Settings </header>
 								<div class="form-group ">
 									<label for="lastname" class="control-label col-lg-3">Google Map API Key:</label>
 									<div class="col-lg-4">
 										<input class=" form-control" name="google_map_api_key" value="<?php echo $settings[0]['google_map_api_key']; ?>" type="text" />
-									</div>
-								</div>
-								
-								<header class="panel-heading" style="margin-bottom: 20px;"> Stripe Settings </header>
-								<div class="form-group ">
-									<label for="lastname" class="control-label col-lg-3">Stripe Payment type:</label>
-									<div class="col-lg-4">
-										<select name="stripe_pay_type" id="stripe_pay_type" class="form-control">
-											<option value="1" <?php echo ($settings[0]['stripe_pay_type'] == 1) ? 'selected' : ''; ?>>Live</option>
-											<option value="2" <?php echo ($settings[0]['stripe_pay_type'] == 2) ? 'selected' : ''; ?>>Sandbox</option>
-										</select>
-									</div>
-								</div>
-								
-								<div class="form-group ">
-									<label for="lastname" class="control-label col-lg-3">Stripe Live Secret Key:</label>
-									<div class="col-lg-4">
-										<input class=" form-control" name="stripe_live_secret_key" value="<?php echo $settings[0]['stripe_live_secret_key']; ?>" type="text" />
-									</div>
-								</div>
-								
-								<div class="form-group ">
-									<label for="lastname" class="control-label col-lg-3">Stripe Live Public Key:</label>
-									<div class="col-lg-4">
-										<input class=" form-control" name="stripe_live_public_key" value="<?php echo $settings[0]['stripe_live_public_key']; ?>" type="text" />
-									</div>
-								</div>
-								
-								<div style="margin-bottom: 20px;"> &nbsp; </div>
-								
-								<div class="form-group ">
-									<label for="lastname" class="control-label col-lg-3">Stripe Sandbox Secret Key:</label>
-									<div class="col-lg-4">
-										<input class=" form-control" name="stripe_sandbox_secret_key" value="<?php echo $settings[0]['stripe_sandbox_secret_key']; ?>" type="text" />
-									</div>
-								</div>
-								
-								<div class="form-group ">
-									<label for="lastname" class="control-label col-lg-3">Stripe Sandbox Public Key:</label>
-									<div class="col-lg-4">
-										<input class=" form-control" name="stripe_sandbox_public_key" value="<?php echo $settings[0]['stripe_sandbox_public_key']; ?>" type="text" />
-									</div>
-								</div>
-								
-								<header class="panel-heading" style="margin-bottom: 20px;"> Twilio Account </header>
-								<div class="form-group ">
-									<label for="lastname" class="control-label col-lg-3">Twilio Account ssid:</label>
-									<div class="col-lg-4">
-										<input class=" form-control" name="twilio_AccountSid" value="<?php echo $settings[0]['twilio_AccountSid']; ?>" type="text" />
-									</div>
-								</div>
-								
-								<div class="form-group ">
-									<label for="lastname" class="control-label col-lg-3">Twilio Auth Token:</label>
-									<div class="col-lg-4">
-										<input class=" form-control" name="twilio_AuthToken" value="<?php echo $settings[0]['twilio_AuthToken']; ?>" type="text" />
-									</div>
-								</div>
-								
-								<div class="form-group ">
-									<label for="lastname" class="control-label col-lg-3">Twilio Auth Mobile No:</label>
-									<div class="col-lg-4">
-										<input class=" form-control" name="twilio_mobile_no" value="<?php echo $settings[0]['twilio_mobile_no']; ?>" type="text" />
-									</div>
-								</div>
-								
-								
-								<header class="panel-heading" style="margin-bottom: 20px;"> Uber Rush Account Details </header>
-								<div class="form-group ">
-									<label for="lastname" class="control-label col-lg-3">Client Id:</label>
-									<div class="col-lg-4">
-										<input class=" form-control" name="client_id" value="<?php echo $settings[0]['client_id']; ?>" type="text" />
-									</div>
-								</div>
-								
-								<div class="form-group ">
-									<label for="lastname" class="control-label col-lg-3">Client Secret:</label>
-									<div class="col-lg-4">
-										<input class=" form-control" name="client_secret" value="<?php echo $settings[0]['client_secret']; ?>" type="text" />
 									</div>
 								</div>
 								
