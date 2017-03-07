@@ -66,12 +66,12 @@
                                             <input class="form-control " name="fax" value="<?php echo $contact_settings[0]['fax']; ?>" type="text" />
                                         </div>
                                     </div>
-                                    <div class="form-group ">
+                                    <!--<div class="form-group ">
                                         <label for="ccomment" class="control-label col-lg-3">Address:</label>
                                         <div class="col-lg-6">
-                                            <textarea class="form-control " name="address"><?php echo $contact_settings[0]['address']; ?></textarea>
+                                            <textarea class="form-control " name="address"><?php //echo $contact_settings[0]['address']; ?></textarea>
                                         </div>
-                                    </div>
+                                    </div>-->
 
                                     <div class="form-group">
                                         <div class="col-lg-offset-3 col-lg-6">

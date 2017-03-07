@@ -17,7 +17,7 @@ class Myaccount_model extends CI_Model {
 	*/
 	function update_account($data,$id=0)
 	{
-		$id = ($id) ? $id : $this->session->userdata('user_id_hotcargo');
+		$id = ($id) ? $id : $this->session->userdata('user_id_lovearchitect');
 		$this->mongo_db->where(array('id' => $id));
 		$this->mongo_db->set($data);
 		$get = $this->mongo_db->update('membership');
@@ -27,7 +27,7 @@ class Myaccount_model extends CI_Model {
 	
 	public function get_account_data($id = 0, $is_merchant = 0)
 	{
-		$id 				= ($id) ? $id : $this->session->userdata('user_id_hotcargo');
+		$id 				= ($id) ? $id : $this->session->userdata('user_id_lovearchitect');
 			
 		if($is_merchant)
 		{
@@ -36,7 +36,7 @@ class Myaccount_model extends CI_Model {
 			$all_details 	= $this->mongo_db->get('site_users');
 		}
 		else{
-			$this->mongo_db->where(array('id' => $id));
+			$this->mongo_db->where(array('id' => (string)$id));
 			$all_details 	= $this->mongo_db->get('membership');
 		}
 			
@@ -46,7 +46,7 @@ class Myaccount_model extends CI_Model {
 	
 	public function check_category($title,$id)
 	{
-		$id 	= ($id) ? $id : $this->session->userdata('user_id_hotcargo');
+		$id 	= ($id) ? $id : $this->session->userdata('user_id_lovearchitect');
 		$this->mongo_db->select('*');
 		$this->mongo_db->from('category');
 		$this->mongo_db->where('title', $title);

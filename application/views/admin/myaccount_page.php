@@ -28,7 +28,15 @@
 			overflow-y: auto !important;
 		}
 	</style>
-	<?php //$ci = &get_instance();?>
+	<?php //$ci = &get_instance();
+	
+	$google_map_api_key = isset($settings[0]['google_map_api_key']) ? $settings[0]['google_map_api_key'] : '';
+	
+	
+	?>
+	<script src="https://maps.googleapis.com/maps/api/js?key=<?php echo $google_map_api_key; ?>&libraries=places"
+        ></script>
+	
 	<section id="main-content">
 		<section class="wrapper">
 			<?php
@@ -100,9 +108,9 @@
 									<div class="form-group ">
 										<label for="email" class="control-label col-lg-3">Address</label>
 										<div class="col-lg-6">
-											<input class="form-control" placeholder="" name="address" id="address" value="<?php echo htmlentities($myaccount_data[0]['address']); ?>" type="text" />
+											<input class="form-control"  placeholder="" name="address" id="address" value="<?php echo htmlentities($myaccount_data[0]['address']); ?>" type="text" />
 										</div>
-										<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places"></script>
+										<!--<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places"></script>-->
 										<script>
 											var x = document.getElementById("address");
 											var k = new google.maps.places.SearchBox(x);
@@ -234,4 +242,8 @@
 		$('#country_div').show();
 		$('#country_id').val(str);
 	}
+	
+	
+
 	</script>
+	

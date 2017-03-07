@@ -1,16 +1,10 @@
 <?php
-class Admin_chngpassword extends CI_Controller {
+class Admin_chngpassword extends MY_Controller {
 
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model('Chngpassword_model');
-		$this->load->model('myaccount_model');
-		$this->load->model('common_model');
-		$this->load->model('sitesetting_model');
-		if(!$this->session->userdata('is_logged_in')){
-			redirect('control/login');
-		}
+		
 	}
 	
 	/**
@@ -20,8 +14,8 @@ class Admin_chngpassword extends CI_Controller {
 	public function index()
 	{
  
-		$user_id = ($this->session->userdata('user_id_hotcargo')) ?  $this->session->userdata('user_id_hotcargo') : 0;
-		$setting_data 					= $this->myaccount_model->get_account_data($user_id);
+		$user_id = ($this->session->userdata('user_id_lovearchitect')) ?  $this->session->userdata('user_id_lovearchitect') : 0;
+		$setting_data 					= $this->myaccount_model->get_account_data((string)$user_id);
 		
 		$data['data']['setting_data'] 	= $setting_data;
 		$data['data']['settings'] 		= $this->sitesetting_model->get_settings();
@@ -41,7 +35,7 @@ class Admin_chngpassword extends CI_Controller {
 		//if save button was clicked, get the data sent via post
 		if ($this->input->server('REQUEST_METHOD') === 'POST')
 		{
-			$user_id = $this->session->userdata('user_id_hotcargo');
+			$user_id = $this->session->userdata('user_id_lovearchitect');
 			
 			//form validation
 			$this->form_validation->set_rules('old_pass', 'Old Password', 'trim|required|min_length[4]|max_length[32]');
@@ -52,13 +46,13 @@ class Admin_chngpassword extends CI_Controller {
 			if ($this->form_validation->run())
 			{
 				$old_pass			= $this->input->post('old_pass');
-				$this->mongo_db->where(array('id' => $user_id, 'pass_word' => $old_pass));
+				$this->mongo_db->where(array('id' => (string)$user_id, 'pass_word' => $old_pass));
 				$check_pass_exist 	= $this->mongo_db->count('membership');
 				
 				if($check_pass_exist > 0)
 				{
 					$data_to_store = array('pass_word' => $this->input->post('cpass'));
-					if($this->Chngpassword_model->update_password($data_to_store, $user_id) == TRUE){
+					if($this->Chngpassword_model->update_password($data_to_store, (string)$user_id) == TRUE){
 						$this->session->set_flashdata('flash_message', 'pwd_updated');
 					}else{
 						$this->session->set_flashdata('flash_message', 'pwd_not_updated');

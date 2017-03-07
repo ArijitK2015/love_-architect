@@ -22,6 +22,10 @@ class Admin_myaccount extends MY_Controller {
 			$admin_details 			= $this->myaccount_model->get_account_data($user_id, 1);
 		else
 			$admin_details 			= $this->myaccount_model->get_account_data($user_id);
+		
+		//echo "<pre>"; echo $user_id;
+		//print_r($admin_details); die;
+			
 			
 		$data['data']['setting_data'] 	= $admin_details;
 		$data['data']['settings'] 		= $this->sitesetting_model->get_settings();
@@ -66,10 +70,8 @@ class Admin_myaccount extends MY_Controller {
 		}
 			
 			
-		if(!empty($this->cmp_auth_id))	
-			$data['view_link'] = 'admin/admin_myaccount_page';
-		else
-			$data['view_link'] = 'admin/myaccount_page';
+		
+		$data['view_link'] = 'admin/myaccount_page';
 			
 		$this->load->view('includes/template', $data);
 	}
@@ -94,7 +96,7 @@ class Admin_myaccount extends MY_Controller {
 			
 			if ($this->form_validation->run())
 			{
-				$this->mongo_db->where(array('email_addres' => trim($this->input->post('email_addres'))))->where_ne('id', $user_id);
+				$this->mongo_db->where(array('email_addres' => trim($this->input->post('email_addres'))))->where_ne('id', (string)$user_id);
 				$chek_exist = $this->mongo_db->count('membership');
 				
 				if($chek_exist == 0)
@@ -141,7 +143,7 @@ class Admin_myaccount extends MY_Controller {
 					//echo '<pre>'; print_r($data_to_store); echo '</pre>'; die;
 					
 					//if the insert has returned true then we show the flash message
-					$update = $this->myaccount_model->update_account($data_to_store, $user_id);
+					$update = $this->myaccount_model->update_account($data_to_store, (string)$user_id);
 					
 					if($update){
 						$this->session->set_flashdata('flash_message', 'info_updated');
