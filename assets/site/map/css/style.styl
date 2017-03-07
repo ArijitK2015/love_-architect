@@ -1,0 +1,126 @@
+body
+  padding-top 20px
+
+a
+  cursor pointer
+
+img.ribbon
+  position fixed
+  z-index 1
+  top 0
+  right 0
+  border 0
+
+.container h3
+  position relative
+
+  small
+    font-size 14px
+    float right
+
+.birdseye-map
+  width 100%
+  height 300px
+  position relative
+
+  &.loading
+    opacity 0.9
+
+    &:after
+      content ' '
+      background url('../images/loading.gif') no-repeat
+      position absolute
+      width 44px
+      height 11px
+      left 50%
+      top 50%
+      margin -6px 0 0 -22px
+
+.map-container
+  background-color black
+  padding 10px
+  box-sizing border-box
+  -moz-box-sizing border-box
+
+.filters
+  background-color #eee
+  padding 10px
+  box-sizing border-box
+  margin-bottom: 30px
+
+  form
+    margin 0
+
+  input, select, button
+    margin-bottom 0
+    margin-right 20px
+    display inline-block
+
+  button
+    float right
+
+  select
+    width 100px
+
+  label
+    display inline-block
+
+.birdseye-results
+  position relative
+
+  &.loading
+    opacity 0.6
+
+    &:after
+      content ' '
+      background url('../images/loading.gif') no-repeat
+      position absolute
+      width 44px
+      height 11px
+      left 50%
+      top 140px
+      margin -6px 0 0 -22px
+
+  > div
+    position relative
+    padding 10px
+
+    &:nth-child(odd)
+      background-color #dedede
+
+    .number
+      position absolute
+      left 12px
+      top 30px
+
+    .content
+      margin-left 35px
+
+      p
+        margin 0
+
+.birdseye-pagination
+  padding 5px
+  div
+    display inline
+
+  .counts
+    font-weight bold
+
+  ul
+    display inline
+    li
+      list-style none
+      display inline-block
+      margin-right 3px
+
+      &:after
+        content '/'
+        margin-left 3px
+
+      &:last-child
+        &:after
+          content ' '
+
+  .prev-next
+    float right

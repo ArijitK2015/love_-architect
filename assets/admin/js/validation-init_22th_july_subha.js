@@ -1,0 +1,614 @@
+var Script = function () {
+
+    $.validator.setDefaults({
+        submitHandler: function() { this.submit(); }
+    });
+
+    $().ready(function() {
+        // validate the comment form when it is submitted
+        $("#commentForm").validate();
+
+        // validate signup form on keyup and submit
+        $("#myinfo").validate({
+            rules: {
+                first_name: "required",
+                last_name: "required",
+                email_addres: {
+                    required: true,
+                    email: true
+                }
+            },
+            messages: {
+                first_name: "Please enter your firstname",
+                last_name: "Please enter your lastname",
+                email_addres: "Please enter a valid email address",
+                agree: "Please accept our policy"
+            }
+        });
+
+	$("#chngPass").validate({
+            rules: {
+                npass: {
+                    required: true,
+                    minlength: 5
+                },
+                cpass: {
+                    required: true,
+                    minlength: 5,
+                    equalTo: "#npass"
+                }
+            },
+            messages: {
+                npass: {
+                    required: "Please provide a password",
+                    minlength: "Your password must be at least 5 characters long"
+                },
+                cpass: {
+                    required: "Please provide a password",
+                    minlength: "Your password must be at least 5 characters long",
+                    equalTo: "Please enter the same password as above"
+                }
+            }
+        });
+
+	$("#siteSettings").validate({
+            rules: {
+                site_name: "required",
+                system_email: {
+                    required: true,
+                    email: true
+                }
+            },
+            messages: {
+                site_name: "Please enter your Site Name",
+                system_email: "Please enter a valid System Email"
+            }
+        });
+
+	$("#contactinfo").validate({
+            rules: {
+                contact_email: {
+                    required: true,
+                    email: true
+                }
+            },
+            messages: {
+                contact_email: "Please enter a valid Contact Email"
+            }
+        });
+
+	$("#editPage").validate({
+            rules: {
+                page_title: "required",
+                page_tag: "required",
+                page_key: "required",
+                page_alias: "required"
+            },
+            messages: {
+                page_title: "Please Enter Page Title",
+                page_tag: "Please Enter Meta Tag",
+                page_key: "Please Enter Meta Keywords",
+                page_alias: "Please Enter Alias"
+            }
+        });
+
+	$("#editPageSP").validate({
+            rules: {
+                page_title_sp: "required"
+            },
+            messages: {
+                page_title_sp: "Please Enter Page Title",
+            }
+        });
+
+	$("#editPageFR").validate({
+            rules: {
+                page_title_fr: "required"
+            },
+            messages: {
+                page_title_fr: "Please Enter Page Title",
+            }
+        });
+        
+	//for artical management
+	
+	$("#addartical").validate({
+            rules: {
+                art_title: "required",
+                img:"required"
+
+            },
+            messages: {
+                art_title: "Please Enter Artical Title",
+		img:"Please select Artical Image",
+            }
+        });
+
+	$("#editArtical").validate({
+            rules: {
+                art_title: "required"
+            },
+            messages: {
+                art_title: "Please Enter Artical Title",
+            }
+        });
+
+	$("#editArticalFR").validate({
+            rules: {
+                art_title_fr: "required"
+            },
+            messages: {
+                art_title_fr: "Please Enter Artical Title in French",
+            }
+        });
+
+	$("#editArticalSP").validate({
+            rules: {
+                art_title_sp: "required"
+            },
+            messages: {
+                art_title_sp: "Please Enter Artical Title in French",
+            }
+        });
+
+	$("#editEmailTemp").validate({
+            rules: {
+                mail_title: "required"
+            },
+            messages: {
+                mail_title: "Please Enter Email Subject",
+            }
+        });
+	
+	//for profile management
+	
+	$("#addpro").validate({
+            rules: {
+                catagory: "required",
+		user_name: "required",
+		password: "required",
+		Email: {
+                    required: true,
+                    email: true
+                }
+            },
+            messages: {
+                country_name: "Please Enter catagory",
+		country_code: "Please Enter User name",
+		iso_code_3: "Please Enter Password",
+		postcode_required: "Please Enter Valid Email"
+
+            }
+        });
+	
+		$("#editpro").validate({
+            rules: {
+                catagory: "required",
+		user_name: "required",
+		password: "required",
+		Email: {
+                    required: true,
+                    email: true
+                }
+            },
+            messages: {
+                country_name: "Please Enter catagory",
+		country_code: "Please Enter User name",
+		iso_code_3: "Please Enter Password",
+		postcode_required: "Please Enter Valid Email"
+
+            }
+        });
+	
+       //for category management
+       
+	$("#addcat").validate({
+            rules: {
+                
+		category_name: "required",
+		//description: "Please Give Meta Description",
+		meta_key: "required",
+		//meta_description: "required",
+		//img1: "required"
+            },
+            messages: {
+               
+		category_name: "Please Enter Category name",
+		//description: "required",
+		meta_key: "Please Enter Meta Key",
+		//meta_description: "Please Give Meta Description",
+		//img1: "Please Insert an Image"
+
+            }
+        });
+	
+	$("#editcat").validate({
+            rules: {
+                
+		category_name: "required",
+		//description: "Please Give Meta Description",
+		meta_key: "required",
+		//meta_description: "required",
+		//img1: "required"
+            },
+            messages: {
+               
+		category_name: "Please Enter Category name",
+		//description: "required",
+		meta_key: "Please Enter Meta Key",
+		//meta_description: "Please Give Meta Description",
+		//img1: "Please Insert an Image"
+
+            }
+        });
+	
+	//state validation
+
+	$("#addstate").validate({
+		    rules: {
+			country_id: "required",
+			state_name: "required",
+			state_name_fr: "required",
+			state_name_sp: "required",
+			state_code: "required",
+			status: "required",
+			
+		    },
+		    messages: {
+			country_name: "Please Enter Country Name",
+		       state_name: "Please Enter State Name",
+		       state_name_fr: "Please Enter State Name(French)",
+		       state_name_sp: "Please Enter State Name(Spanish)",
+			state_code: "Please Enter State Code",
+		       status: "Please Enter Status"
+	
+		    }
+		});
+	
+	$("#editstate").validate({
+		    rules: {
+			country_id: "required",
+			state_name: "required",
+			state_name_fr: "required",
+			state_name_sp: "required",
+			state_code: "required",
+			status: "required",
+			
+		    },
+		    messages: {
+			country_id: "Please Enter Country Name",
+		       state_name: "Please Enter State Name",
+		       state_name_fr: "Please Enter State Name(French)",
+		       state_name_sp: "Please Enter State Name(Spanish)",
+			state_code: "Please Enter State Code",
+		       status: "Please Enter Status"
+	
+		    }
+		});
+
+         //subscription validation
+
+	$("#addsubscription").validate({
+		    rules: {
+			subscription_type: "required",
+			length: "required",
+		       cost: "required",
+			description: "required",
+			status: "required",
+			
+		    },
+		    messages: {
+			subscription_type: "Please Enter Subscription Type",
+		       length: "Please Enter Length",
+		       cost: "Please Enter Cost",
+		       description: "Please Enter Description",
+		       
+		       status: "Please Enter Status"
+	
+		    }
+		});
+	
+	$("#editsubscription").validate({
+		    rules: {
+			subscription_type: "required",
+			length: "required",
+			cost: "required",
+			description: "required",
+			status: "required",
+			
+		    },
+		    messages: {
+			subscription_type: "Please Enter Subscription Type",
+		       length: "Please Enter Length",
+		       cost: "Please Enter Cost",
+		       description: "Please Enter Description",
+		       
+		       status: "Please Enter Status"
+	
+		    }
+		});
+	
+	$("#editsubscriptionfr").validate({
+		    rules: {
+		      subscription_type_fr: "required",
+			description_fr: "required"
+		       
+		    },
+		    messages: {
+			subscription_type_fr: "Please Enter Subscription Type",
+			description_fr: "Please Enter Category Description"
+		       
+	
+		    }
+		});
+	$("#editsubscriptionsp").validate({
+		    rules: {
+		      subscription_type_sp: "required",
+			description_sp: "required"
+		       
+		    },
+		    messages: {
+			subscription_type_sp: "Please Enter Subscription Type",
+			description_sp: "Please Enter Category Description"
+		       
+	
+		    }
+		});
+	
+	//Business validation
+
+	$("#addbusiness").validate({
+		    rules: {
+			business_type: "required",
+			 business_type_fr: "required",
+			  business_type_sp: "required",
+			status: "required",
+			
+		    },
+		    messages: {
+			business_type: "Please Enter Business Type",
+		      business_type_fr: "Please Enter Business Type (French)",
+		      business_type_sp: "Please Enter Business Type (Spanish)",
+		       status: "Please Enter Status"
+	
+		    }
+		});
+	
+	$("#editbusiness").validate({
+		    rules: {
+		       business_type: "required",
+			 business_type_fr: "required",
+			  business_type_sp: "required",
+			status: "required",
+		    },
+		    messages: {
+		       business_type: "Please Enter Business Type",
+		      business_type_fr: "Please Enter Business Type (French)",
+		      business_type_sp: "Please Enter Business Type (Spanish)",
+		       status: "Please Enter Status"
+	
+	
+		    }
+		});
+
+
+     //validation of social links
+	$("#social-link").validate();
+
+//     //validation of user management
+//        $("#edituser").validate({
+//		    rules: {
+//		          password: "required",
+//			
+//		    },
+//		    messages: {
+//		       password: "Please Enter Password",
+//		      
+//	
+//		    }
+//		});
+         
+     //validation of Home Owner management
+      
+
+	$("#edituser").validate({
+		   rules : {
+
+		       f_name:"required",
+                       l_name:"required",
+                       strt_address:"required",
+                       city:"required",
+                       country:"required",
+                       state:"required",
+                       phone:"required",
+		       zipcode:"required",
+		       
+		       
+		       c_password : {
+			 
+			   equalTo : "#password"
+		       }
+		   },
+		   
+		    messages: {
+			f_name:"Please Enter First Name",
+                        l_name:"Please Enter Last Name",
+                        strt_address:"Please Enter Street Address",
+                        city:"Please Enter City",
+                        country:"Please select Country",
+                        state:"Please select state",
+                        phone:"Please Enter Phone Number",
+                        zipcode:"Please Enter Zipcode"
+			
+		    }
+		    
+		   });	 
+	 
+	 
+	 
+	 
+	 
+     //	 validation of contractor management
+	 
+	$("#editcontract").validate({
+		    rules: {
+                        contact_f_name: "required",
+			contact_l_name: "required",
+		        b_name: "required",
+			strt_add: "required",
+			city: "required",
+			coun: "required",
+			state: "required",
+			zip: "required",
+			phone: "required",
+			bus_mail: "required",
+			website: "required",
+			fax: "required",
+			bus_since: "required",
+			no_emp: "required",
+			serv_dis: "required",
+			spnsr: "required",
+			btyp: "required",
+			
+		       
+		       
+		        c_password : {
+			 
+			   equalTo : "#password"
+		       
+		   }
+			
+		    },
+		    messages: {
+                        contact_f_name: "Please Enter First Name",
+                        contact_l_name: "Please Enter Last Name",
+		        b_name: "Please Enter Business Name",
+		        strt_add: "Please Enter Address",
+		        city: "Please Enter City",
+		        coun: "Please Select Country",
+	                state: "Please Select State",
+			zip: "Please Enter Zip",
+			phone: "Please Enter Phone",
+			bus_mail: "Please Enter Business Mail",
+			website: "Please Enter Website",
+			fax: "Please Enter Fax",
+			bus_since: "Please Enter Business Since",
+			no_emp: "Please Enter Number of Employee",
+			serv_dis: "Please Enter Service Distance",
+			spnsr: "Please Select Sponsor",
+			btyp: "Please Select Business Type"
+
+		    }
+		});
+	
+	
+	
+	
+	
+	
+	
+	
+        // propose username by combining first- and lastname
+        $("#username").focus(function() {
+            var firstname = $("#firstname").val();
+            var lastname = $("#lastname").val();
+            if(firstname && lastname && !this.value) {
+                this.value = firstname + "." + lastname;
+            }
+        });
+
+        //code to hide topic selection, disable for demo
+        var newsletter = $("#newsletter");
+        // newsletter topics are optional, hide at first
+        var inital = newsletter.is(":checked");
+        var topics = $("#newsletter_topics")[inital ? "removeClass" : "addClass"]("gray");
+        var topicInputs = topics.find("input").attr("disabled", !inital);
+        // show when newsletter is checked
+        newsletter.click(function() {
+            topics[this.checked ? "removeClass" : "addClass"]("gray");
+            topicInputs.attr("disabled", !this.checked);
+        });
+    });
+
+    //for profile management
+	
+	$("#addpro").validate({
+            rules: {
+                catagory: "required",
+		user_name: "required",
+		password: "required",
+		Email: {
+                    required: true,
+                    email: true
+                }
+            },
+            messages: {
+                catagory: "Please Enter catagory",
+		user_name: "Please Enter User name",
+		password: "Please Enter Password",
+		Email: "Please Enter Valid Email"
+
+            }
+        });
+	
+		$("#editpro").validate({
+            rules: {
+                catagory: "required",
+		user_name: "required",
+		password: "required",
+		Email: {
+                    required: true,
+                    email: true
+                }
+            },
+             messages: {
+                catagory: "Please Enter catagory",
+		user_name: "Please Enter User name",
+		password: "Please Enter Password",
+		Email: "Please Enter Valid Email"
+
+            }
+        });
+    /* Slide div for reply message in ticket management  */  
+    $(document).ready(function(){
+ 
+        $(".slidingDiv").hide();
+        $(".show_hide").show();
+ 
+    $('.show_hide').click(function(){
+    $(".slidingDiv").slideToggle();
+    });
+ 
+});
+    
+    /*  end */
+
+}();
+
+      /*
+      For state dropdown in
+      contractor management
+      */
+       function state_change(country_id,url)
+	{
+		
+		if(country_id!="")
+		{
+			var dataString = "country_id=" + country_id;
+			$.ajax({
+				type: "POST",
+				url: url,
+				data: dataString,
+				cache: false,
+				success: function(data){
+				    
+					document.getElementById("loading").innerHTML=data;
+				}
+			});
+	    }else{
+		
+		document.getElementById("loading").innerHTML='<select  class="form-control valid" style="width: 300px" name="state" id="state"><option value="">Please Select</option></select>';
+	    }
+	}
+
+

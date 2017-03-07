@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="<?php echo $settings[0]['meta_keywords']; ?>">
+		<meta name="author" content="Esolz technologies">
+	
+		<title> <?php echo (isset($ptitle) && ($ptitle != '')) ? $ptitle : $settings[0]['site_name'].' - Admin'; ?> </title>
+		
+		<!--Core CSS -->
+		<link href="<?php echo base_url();?>assets/admin/bs3/css/bootstrap.min.css" rel="stylesheet">
+		<link href="<?php echo base_url();?>assets/admin/js/jquery-ui/jquery-ui-1.10.1.custom.min.css" rel="stylesheet">
+		<link href="<?php echo base_url();?>assets/admin/css/bootstrap-reset.css" rel="stylesheet">
+		<link href="<?php echo base_url();?>assets/admin/font-awesome/css/font-awesome.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="<?php echo $this->config->base_url(); ?>assets/admin/js/bootstrap-fileupload/bootstrap-fileupload.css" />
+		<!--clock css-->
+		<link href="<?php echo base_url();?>assets/admin/js/css3clock/css/style.css" rel="stylesheet">
+		
+		<!--responsive table-->
+		<link href="<?php echo base_url();?>assets/admin/css/table-responsive.css" rel="stylesheet" />
+	 
+		<!-- Custom styles for this template -->
+		<link href="<?php echo base_url();?>assets/admin/css/style.css" rel="stylesheet">
+		<link href="<?php echo base_url();?>assets/admin/css/style-responsive.css" rel="stylesheet"/>
+	 
+		<!--dynamic table-->
+		<link href="<?php echo base_url();?>assets/admin/js/advanced-datatable/css/demo_page.css" rel="stylesheet" />
+		<link href="<?php echo base_url();?>assets/admin/js/advanced-datatable/css/demo_table.css" rel="stylesheet" />
+		<link rel="stylesheet" href="<?php echo base_url();?>assets/admin/js/data-tables/DT_bootstrap.css" />
+	
+		<!-- Just for debugging purposes. Don't actually copy this line! -->
+		<!--[if lt IE 9]>
+		<script src="<?php echo base_url();?>assets/admin/js/ie8-responsive-file-warning.js"></script><![endif]-->
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+		<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+		<script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+		<![endif]-->
+		
+		<script src="<?php echo $this->config->base_url(); ?>assets/admin/js/jquery.js"></script>
+		<script src="<?php echo $this->config->base_url(); ?>assets/admin/bs3/js/bootstrap.min.js"></script>
+		<script src="<?php echo $this->config->base_url(); ?>assets/admin/js/jquery-ui-1.9.2.custom.min.js"></script>
+		<script src="<?php echo $this->config->base_url(); ?>assets/admin/js/jquery-migrate-1.2.1.js"></script>
+		
+		<script>var base_url = '<?php echo base_url(); ?>';</script>
+	</head>
+	
+	<body>
+		<?php $page = $this->uri->segment(2); ?>
+		<section id="container">
+			<!--header start-->
+			<header class="header fixed-top clearfix">
+				<!--logo start-->
+				<div class="brand">
+					<a href="<?php echo base_url(); ?>control/dashboard" class="logo">
+						<b><?php echo $settings[0]['site_name']; ?></b>
+					</a>
+					<div class="sidebar-toggle-box">
+						<div class="fa fa-bars"></div>
+					</div>
+				</div>
+				
+				
+				
+				<!--logo end-->
+			
+				<div class="top-nav clearfix">
+					<!--search & user info start-->
+					<ul class="nav pull-right top-menu">
+						
+						<!-- <li>
+						<	input type="text" class="form-control search" placeholder=" Search">
+						</li>-->
+						<!-- user login dropdown start-->
+						<li class="dropdown">
+							<a data-toggle="dropdown" class="dropdown-toggle" href="#">
+								<?php
+								$permission_arr = array();
+								$ci=& get_instance();
+								$user_id = ($this->session->userdata('user_id')) ? $this->session->userdata('user_id') : 0 ;
+								$profile_image = $ci->db->where('id',$user_id)->where('status',1)->get('membership')->result_array();
+								
+								$permissions = $ci->db->where('user_id',$user_id)->where('status',1)->get('user_permission')->result_array();
+								foreach($permissions as $permission)
+								{
+									$permission_arr[] = $permission['menu_id'];
+								}
+								
+								if($profile_image[0]['profile_image']!="")
+								{
+									?>
+									<img alt="" src="<?php echo base_url();?>assets/uploads/subadmin_image/<?php echo $profile_image[0]['profile_image']; ?>" style="height:50px; width:50px">
+									<?php
+								}
+								else
+								{
+									?>
+									<img alt="" src="<?php echo base_url();?>assets/admin/images/avatar1_small.jpg">
+									<?php
+								}
+								?>
+								<span class="username"><?php echo $profile_image[0]['first_name'] ." ".$profile_image[0]['last_name'];?></span>
+								<b class="caret"></b>
+							</a>
+							<ul class="dropdown-menu extended logout">
+								<li><a href="<?php echo base_url(); ?>control/myaccount"><i class=" fa fa-suitcase"></i>Profile</a></li>
+								<li><a href="<?php echo base_url(); ?>control/contactsetting"><i class="fa fa-cog"></i>Contact Settings</a></li>
+								<li><a href="<?php echo base_url(); ?>control/logout"><i class="fa fa-key"></i> Log Out</a></li>
+							</ul>
+						</li>
+						<!-- user login dropdown end -->
+					</ul>
+				    <!--search & user info end-->
+				</div>
+			</header>
+			<!--header end-->
+			<!--sidebar start-->
+		
+			<aside>
+				<div id="sidebar" class="nav-collapse">
+					<!-- sidebar menu start-->
+					<div class="leftside-navigation">
+						<ul class="sidebar-menu" id="nav-accordion">
+							<?php
+								$ci=& get_instance();
+								$all_menus = $ci->db->where('menu_type',0)->where('parent_id',0)->where('status',1)->get('menu')->result_array();
+								foreach($all_menus as $menus)
+								{
+									
+									$all_sub_menus = $ci->db->where('parent_id',$menus['id'])->where('status',1)->get('menu')->result_array();
+									$super_admin = $ci->db->where('id',$user_id)->where('status',1)->get('membership')->result_array();
+									$super = 1;
+									if(isset($super_admin) && ($super_admin[0]['is_sub_admin']==0))
+									{
+										$super = 0;
+									}	
+										if(in_array($menus['id'],$permission_arr) || $super == 0)
+										{
+								?>
+									<li>
+											<a <?php if($page == $menus['url']){ ?> class="active" <?php } ?> href="<?php echo (!empty($menus['url'])) ? base_url().'control/'.$menus['url'].'/'.$menus['parameters'] : 'javascript:void(0);'; ?>">
+												<i class="<?php echo $menus['icon_class'];?>"></i>
+												<span><?php echo $menus['title'] ;?></span>
+											</a>
+											
+											<?php if (!empty($all_sub_menus))
+											{
+												echo "<ul class='sub'>";
+												foreach ($all_sub_menus as $sub_menu)
+												{
+													if(in_array($sub_menu['id'],$permission_arr) || $super == 0 )
+													{
+											?>
+														<li <?php if($page == $sub_menu['url']){ ?> class="active" <?php } ?>><a href="<?php echo (!empty($sub_menu['url'])) ? base_url().'control/'.$sub_menu['url'].'/'.$sub_menu['parameters'] : 'javascript:void(0);'; ?>"><?php echo $sub_menu['title'] ;?></a></li>
+													
+												<?php
+													}
+												}
+												echo "</ul>";
+											}
+											?>
+										</li>
+										<?php
+										}
+							
+								//}
+								}
+							?>
+						</ul>
+					</div>
+					<!-- sidebar menu end-->
+				</div>
+			</aside>
+			<!--sidebar end-->
+		
+
