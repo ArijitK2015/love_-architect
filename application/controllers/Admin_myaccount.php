@@ -16,7 +16,7 @@ class Admin_myaccount extends MY_Controller {
 	{
 		$data['data']					= $this->data;
 			
-		$user_id 						= $merchant_id = ($this->session->userdata('user_id_hotcargo')) ?  $this->session->userdata('user_id_hotcargo') : 1;
+		$user_id 						= $merchant_id = ($this->session->userdata('user_id_lovearchitect')) ?  $this->session->userdata('user_id_lovearchitect') : 1;
 			
 		if(!empty($this->cmp_auth_id))
 			$admin_details 			= $this->myaccount_model->get_account_data($user_id, 1);
@@ -77,7 +77,7 @@ class Admin_myaccount extends MY_Controller {
 		
 	public function updt()
 	{
-		$user_id = $dealer_id = ($this->session->userdata('user_id_hotcargo')) ?  $this->session->userdata('user_id_hotcargo') : 1;
+		$user_id = $dealer_id = ($this->session->userdata('user_id_lovearchitect')) ?  $this->session->userdata('user_id_lovearchitect') : 1;
 		$myaccount_data			= $this->myaccount_model->get_account_data($user_id);
 		$old_img 					= (isset($myaccount_data[0]['profile_iamge'])) ? $myaccount_data[0]['profile_iamge'] : '';
 		
@@ -162,7 +162,7 @@ class Admin_myaccount extends MY_Controller {
 		
 	public function update_merchant()
 	{
-		$user_id 				= ($this->session->userdata('user_id_hotcargo')) ?  $this->session->userdata('user_id_hotcargo') : 1;
+		$user_id 				= ($this->session->userdata('user_id_lovearchitect')) ?  $this->session->userdata('user_id_lovearchitect') : 1;
 		$data_to_store 		= $data_to_store_old	= array();
 			
 			
