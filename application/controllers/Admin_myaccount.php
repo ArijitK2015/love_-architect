@@ -1,9 +1,11 @@
 <?php
-class Admin_myaccount extends CI_Controller {
+class Admin_myaccount extends MY_Controller {
+
 		
 	public function __construct()
 	{
 		parent::__construct();
+		
 	}
 		
 	/**
@@ -65,7 +67,7 @@ class Admin_myaccount extends CI_Controller {
 			
 			
 		if(!empty($this->cmp_auth_id))	
-			$data['view_link'] = 'admin/merchant_myaccount_page';
+			$data['view_link'] = 'admin/admin_myaccount_page';
 		else
 			$data['view_link'] = 'admin/myaccount_page';
 			
