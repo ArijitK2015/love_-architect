@@ -115,15 +115,15 @@
 					{
 					?>
                     <tr>
-                            <td><?php echo $row->first_name ;?></td>
-							<td><?php echo $row->last_name ;?></td>
-                            <td><?php echo $row->email_addres ;?></td>
-                            <td><?php echo $row->user_name ;?></td>
-							<td><center><img src="<?php echo base_url();?>assets/uploads/subadmin_image/<?php echo $row->profile_image; ?>" style="height:50px; width:50px"></center></td>
-                            <td><?php if($row->status=='1'){ echo "ACTIVE";} else {echo "INACTIVE";}?></td>
+                            <td><?php echo $row['first_name'] ;?></td>
+							<td><?php echo $row['last_name'] ;?></td>
+                            <td><?php echo $row['email_addres'] ;?></td>
+                            <td><?php echo $row['user_name'] ;?></td>
+							<td><center><img src="<?php echo base_url();?>assets/uploads/subadmin_image/<?php echo $row['profile_image']; ?>" style="height:50px; width:50px"></center></td>
+                            <td><?php if($row['status']=='1'){ echo "ACTIVE";} else {echo "INACTIVE";}?></td>
                             <td>
-                                <a class="fa fa-edit" href="<?php echo site_url("control").'/manage-subadmin/edit/'.$row->id; ?>" onclick="b()" > </a>
-								<a class="fa fa-trash-o" href="javascript:check_confirm('<?php echo $row->id?>')"></a>
+                                <a class="fa fa-edit" href="<?php echo site_url("control").'/manage-subadmin/edit/'.$row['_id']; ?>" onclick="b()" > </a>
+								<a class="fa fa-trash-o" href="javascript:check_confirm('<?php echo $row['_id']?>')"></a>
 						   </td>
 						</div>
                 </div>

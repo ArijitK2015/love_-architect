@@ -433,7 +433,7 @@ class Subadmin extends MY_Controller {
 		$data['data']['settings'] 		= $this->Sitesetting_model->get_settings();
 		
 		$id = $this->uri->segment(4);
-		$profile_image=$this->common_model->get('membership',array('*'),array('id'=>$id));
+		$profile_image=$this->common_model->get('membership',array('*'),array('_id'=>$id));
 		if(isset($profile_image) && count($profile_image)>0)
 		{
 			if(file_exists(realpath('subadmin_image/'.$profile_image[0]['profile_image'])))
