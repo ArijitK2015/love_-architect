@@ -22,7 +22,7 @@ class Subadmin_model extends CI_Model
 	public function get_subadmin()
     {
 		
-        $this->mongo_db->where('membership.is_sub_admin','1');
+        $this->mongo_db->where('is_sub_admin','1');
 		$fetch = $this->mongo_db->get('membership');
 		
 		return $fetch;
