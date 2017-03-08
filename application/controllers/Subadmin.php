@@ -1,0 +1,459 @@
+<?php
+class Subadmin extends MY_Controller {
+
+	public function __construct()
+	{
+		parent::__construct();
+		// loading models
+	
+		
+	}
+
+	public function index()
+	{
+		$data['data']					= $this->data;
+		//getting dealers id
+		$user_id 						= $dealer_id = ($this->session->userdata('user_id_lovearchitect')) ?  $this->session->userdata('user_id_lovearchitect') : 0;
+		
+		if(!empty($this->cmp_auth_id))
+			$admin_details 			= $this->myaccount_model->get_account_data($user_id, 1);
+		else
+			$admin_details 			= $this->myaccount_model->get_account_data($user_id);
+				
+		$data['data']['setting_data'] 	= $admin_details;
+		
+		
+		
+		
+		$data['data']['subadmin'] 		=  $this->Subadmin_model->get_subadmin();
+		$data['view_link'] 				= 'admin/subadmin/index';
+		$this->load->view('includes/template', $data);
+	}
+    
+    
+	function user_name_chk()
+	{
+		$data['data']					= $this->data;
+		//getting dealers id
+		$user_id 						= $dealer_id = ($this->session->userdata('user_id_lovearchitect')) ?  $this->session->userdata('user_id_lovearchitect') : 0;
+		
+		if(!empty($this->cmp_auth_id))
+			$admin_details 			= $this->myaccount_model->get_account_data($user_id, 1);
+		else
+			$admin_details 			= $this->myaccount_model->get_account_data($user_id);
+				
+		$data['data']['setting_data'] 	= $admin_details;
+        
+		if ($this->input->server('REQUEST_METHOD') === 'POST')
+		{ 
+			$new			= $this->input->post('new_user_name');
+			$old			= $this->input->post('h_user_name');
+			$user_name	= $this->input->post('user_name');
+			$email		= $this->input->post('email');
+			
+			if($email	!= '')
+			{
+				$chk	= $this->Subadmin_model->email_check($email);
+				echo $chk;  
+			}
+			if($user_name	!= '')
+			{
+				$chk	= $this->Subadmin_model->new_user_name($user_name);
+				echo $chk;
+			}
+			if($new !='' && $old != '')
+			{
+				$chk	= $this->Subadmin_model->chk_user_name($new,$old);
+				echo $chk;
+			}
+		}
+	}
+    
+	public function add()
+	{
+		$data['data']					= $this->data;
+		//getting dealers id
+		$user_id 						= $dealer_id = ($this->session->userdata('user_id_lovearchitect')) ?  $this->session->userdata('user_id_lovearchitect') : 0;
+
+		
+		$this->mongo_db->where(array('menu_type'=>'0','is_subadmin'=>'1','status'=>'1','parent_id'=>'0'));
+		$this->mongo_db->order_by(array('title'=>'asc'));
+		
+		$data['userdata']=$fetch = $this->mongo_db->get('menus');
+		//echo "<pre>"; print_r($fetch); die;
+		
+		
+		if ($this->input->server('REQUEST_METHOD') === 'POST')
+		{
+			$first_name 			= trim($this->input->post('firstname'));
+			$last_name 			= trim($this->input->post('lastname'));
+			$email				= trim($this->input->post('a_email'));
+			$user_name 			= trim($this->input->post('user_name'));
+			$password 			= trim($this->input->post('password'));
+			
+			$user_det_salt =         $this->password_salt;
+			$password=$enc_password 	= crypt($password, $user_det_salt);
+			
+			
+			$menu_permission 		= $this->input->post('management');
+			$sub_menu_permission 	= $this->input->post('permissions');
+			$status				= $this->input->post('status');
+			
+			$image_name			= "";
+			//echo "<pre>";
+			//print_r($menu_permission);
+			//print_r($sub_menu_permission);
+			//echo "</pre>"; die;
+			$data_to_store = array(
+								'is_sub_admin' 	=> '1',
+								'first_name' 		=> $first_name,
+								'last_name' 		=> $last_name,
+								'email_addres' 	=> $email,
+								
+								'user_name' 		=> $user_name,
+								'pass_word' 		=> $password,
+								'password_salt'     => $user_det_salt,
+ 								'status' 			=> $status,
+							);
+			
+			//echo "<pre>";print_r($data_to_store); die;
+			$res1=$this->common_model->get('membership',array('*'),array('email_addres'=>(string)$email));
+			$res2=$this->common_model->get('membership',array('*'),array('user_name'=>(string)$user_name));
+			if(count($res1)>0  || count($res2)>0)
+			{
+				$this->session->set_flashdata('flash_message', 'subadmin_not_added');
+				 redirect('control/manage-subadmin');
+				
+			}
+			
+				
+			$var 				= 'subadmin_image';
+		    if($_FILES[$var]["name"]!='')
+			{
+		    
+			 if (($_FILES[$var]["type"] == "image/jpeg") ||
+				($_FILES[$var]["type"] == "image/JPEG") ||
+				($_FILES[$var]["type"] == "image/jpg") ||
+				($_FILES[$var]["type"] == "image/JPG") ||
+				($_FILES[$var]["type"] == "image/gif") ||
+				($_FILES[$var]["type"] == "image/GIF") ||
+				($_FILES[$var]["type"] == "image/png") ||
+				($_FILES[$var]["type"] == "image/PNG"))
+				{
+					
+					
+					$DIR_IMG_NORMAL 		= FILEUPLOADPATH.'assets/uploads/subadmin_image/';
+					$filename 			= substr($_FILES[$var]['name'],strripos($_FILES[$var]['name'],'.'));
+					$s					= "love_architect".time().rand(0,20).$filename;
+					$fileNormal 			= $DIR_IMG_NORMAL.$s;
+					$file 				= $_FILES[$var]['tmp_name'];
+					list($width, $height) 	= getimagesize($file);
+					
+					$result 				= move_uploaded_file($file, $fileNormal);
+					//echo "<pre>";print_r($data_to_store); die;
+					
+					if($result)
+					{
+						$srcPath		= FILEUPLOADPATH.'assets/uploads/subadmin_image/'.$s;
+						$destPath 	= FILEUPLOADPATH.'assets/uploads/subadmin_image/thumb/'.$s;
+						$destWidth	= 100;
+						$destHeight	= 100;
+						$this->imagethumb->thumbnail_new($destPath, $srcPath, $destWidth, $destHeight);
+						$image_name	= $s;
+						$data_to_store['profile_image'] = $image_name;
+							
+						//echo "<pre>";print_r($data_to_store); die;	
+							
+							
+							$insert = $this->Subadmin_model->add_subadmin($data_to_store);
+							
+							
+							if($insert)
+							{
+								foreach($menu_permission as $permission)
+								{
+									 $permission_arr 			= (isset($sub_menu_permission[$permission])) ? implode(',',$sub_menu_permission[$permission]) : "";
+									$data_to_store_permission	= array(
+														'user_id' 		=> $insert,
+														'menu_id' 		=> $permission,
+														'menu_elements' 	=> $permission_arr,
+														'status' 			=> 1,
+													);
+									$this->common_model->add('user_permission',$data_to_store_permission);
+								}
+								foreach($sub_menu_permission as $key=>$sub_permission)
+								{
+									$permission_str			= (isset($sub_permission)) ? implode(',',$sub_permission) : "";
+									$data_to_store_permission	= array(
+														'user_id' 		=> $insert,
+														'menu_id' 		=> $key,
+														'menu_elements' 	=> $permission_str,
+														'status' 			=> 1,
+													);
+									$this->common_model->add('user_permission',$data_to_store_permission);
+								}
+								//exit;
+							//	$password_txt	= 'This is the auto generated password  '.$password;
+							//	$subject		= 'Welcome to Graphic election center';
+							// 
+							//	$site_details 	= $this->Sitesetting_model->get_settings();
+							//	$system_mail 	= $site_details[0]['system_email'];
+							//	$content		= '<table cellpadding="10" cellspacing="3" width="780">
+							//						<tbody>
+							//							<tr>
+							//								<td colspan="2" align="left" bgcolor="#fff"  >Dear [NAME],</td>
+							//							</tr>
+							//								<tr>
+							//								<td colspan="2" align="left" bgcolor="#fff"  >
+							//								<p>Welcome to Graphic election center. Administrator has added you as a subadmin.</p>
+							//								<p>Your Account details are given below.</p>
+							//								</td>
+							//								
+							//							</tr>
+							//							<tr>
+							//								<td bgcolor="#fff" >
+							//									User Name: [USER_NAME] <br>
+							//									Password: [PASSWORD]
+							//								</td>
+							//							  <td bgcolor="#fff">
+							//								 
+							//							  </td>
+							//							</tr>
+							//					
+							//						</tbody>
+							//						<tbody>
+							//							<tr>
+							//								<td bgcolor="#fff">
+							//							  Graphic election center Admin<br>
+							//							  [LOGO]
+							//								</td>
+							//								<td >
+							//								</td>
+							//							</tr>
+							//						</tbody>
+							//	</table>';
+							//	$logo_url		= '<img src="'.base_url().'assets/site/images/ghana_election_logo.png" style="    width: 200px;">';
+							//	$name		= $first_name.' '.$last_name;
+							//	$replace		= array('[NAME]','[USER_NAME]','[PASSWORD]','[LOGO]');
+							//	$replace_with	= array($name,$user_name,$password,$logo_url);//print_r($replace_with);
+							//	$message		= str_replace($replace,$replace_with,$content);
+							//
+							//	//$message	="<html>
+							//	//	<head>
+							//	//	<title></title>
+							//	//	</head>
+							//	//	<body>
+							//	//	<table cellspacing=\"4\" cellpadding=\"4\" border=\"0\" align=\"left\">
+							//	//	<tr>
+							//	//	<td colspan=\"2\">Hello ".$first_name.' '.$last_name.", </td>
+							//	//	</tr>
+							//	//	
+							//	//	<tr><td>Login credentials : </td></tr>
+							//	//	
+							//	//	<tr><td> Username : $user_name </td></tr>
+							//	//	<tr><td> Password : $password </td></tr>
+							//	//	
+							//	//	<tr>
+							//	//	<td colspan=\"2\">Thanks & Regards.<br>Graphic election center</td>
+							//	//	</tr>
+							//	//	</table>
+							//	//	</body>
+							//	// </html>";
+							//    
+							//	$message_content	= $message;
+							//	$message_subject	= $subject;
+							//	$to_subadmin  		= $name;
+							//	$to_email 	    	= $email;
+							//  // exit;
+							//    $this->Email_model->send_email($to_email, $message_subject, $message_content, '', '', '', $to_subadmin);
+							    $this->session->set_flashdata('flash_message', 'subadmin_added');
+							}
+							else
+							{
+								$this->session->set_flashdata('flash_message', 'subadmin_not_added');
+							}
+					}
+					else
+					{
+						$this->session->set_flashdata('flash_message', 'subadmin_not_added');
+					}
+				}
+			}
+			   redirect('control/manage-subadmin');
+		}
+        
+            $data['view_link'] = 'admin/subadmin/add_subadmin';
+            $this->load->view('includes/template', $data);
+    }
+	
+	public function update()
+	{
+		$data['data']					= $this->data;
+		//getting dealers id
+		$user_id 						= $dealer_id = ($this->session->userdata('user_id_lovearchitect')) ?  $this->session->userdata('user_id_lovearchitect') : 0;
+		
+		
+		
+		$id 				= $this->uri->segment(4);
+		$data['subadmin'] 	= $this->common_model->get('membership',array('*'),array('_id'=>$user_id));
+		//$data['userdata'] 	= $this->common_model->get('menu',array('*'),array('parent_id' => 0,'menu_type'=>0),null,null,null,null,'title','asc');
+		//$data['userdata'] =$this->db->where('id !=',4)->where('id !=',10)->where('parent_id',0)->where('menu_type',0)->order_by('title','asc')->get('menu')->result_array();
+		$this->mongo_db->where(array('menu_type'=>'0','is_subadmin'=>'1','status'=>'1','parent_id'=>'0'));
+		$this->mongo_db->order_by(array('title'=>'asc'));
+		
+		$data['userdata']=$fetch = $this->mongo_db->get('menus');
+		
+		if ($this->input->server('REQUEST_METHOD') === 'POST')
+		{
+			$first_name 			= trim($this->input->post('f_name'));
+			$last_name 			= trim($this->input->post('l_name'));
+			$email				= trim($this->input->post('a_email'));
+			$user_name 			= trim($this->input->post('u_name'));
+			$password 			= trim($this->input->post('password'));
+			$menu_permission 		= $this->input->post('management');
+			$sub_menu_permission 	= $this->input->post('permissions');
+			$status				= $this->input->post('status');
+			$var 				= 'subadmin_image';
+			$image_name 			=  (isset($data['subadmin'][0]['profile_image'])) ? $data['subadmin'][0]['profile_image'] : "";
+			// echo "<pre>";
+			//print_r($menu_permission);
+			//print_r($sub_menu_permission);
+			//echo "</pre>";
+			//die;
+			if($_FILES[$var]["name"]!='')
+			{
+				if ( ($_FILES[$var]["type"] 	== "image/jpeg") ||
+				    ($_FILES[$var]["type"] 	== "image/JPEG") ||
+				    ($_FILES[$var]["type"] 	== "image/jpg") ||
+				    ($_FILES[$var]["type"] 	== "image/JPG") ||
+				    ($_FILES[$var]["type"] 	== "image/gif") ||
+				    ($_FILES[$var]["type"] 	== "image/GIF") ||
+				    ($_FILES[$var]["type"] 	== "image/png") ||
+				    ($_FILES[$var]["type"] 	== "image/PNG") )
+				{
+					$DIR_IMG_NORMAL 	= FILEUPLOADPATH.'/assets/uploads/subadmin_image/';
+					$filename 		= substr($_FILES[$var]['name'],strripos($_FILES[$var]['name'],'.'));
+					$s				= "love_architect".time().$filename;	
+					$fileNormal 		= $DIR_IMG_NORMAL.$s;
+					$file 			= $_FILES[$var]['tmp_name'];
+					
+					list($width, $height) 	= getimagesize($file);
+					$result 				= move_uploaded_file($file, $fileNormal);
+					if($result)
+					{
+						$old_image = (isset($data['subadmin'][0]['profile_image'])) ? $data['subadmin'][0]['profile_image'] : "";
+						if($old_image!='')
+						{
+							if(file_exists(realpath('subadmin_image/'.$old_image)))
+							{
+								@unlink(realpath('subadmin_image/'.$old_image));
+							}
+							if(file_exists(realpath('subadmin_image/thumb/'.$old_image)))
+							{
+								@unlink(realpath('subadmin_image/thumb/'.$old_image));
+							}
+						}
+						
+						$srcPath		= FILEUPLOADPATH.'assets/uploads/subadmin_image/'.$s;
+						$destPath1 	= FILEUPLOADPATH.'assets/uploads/subadmin_image/thumb/'.$s;
+						$destWidth1	= 100;
+						$destHeight1	= 100;
+						$this->imagethumb->thumbnail_new($destPath1, $srcPath, $destWidth1, $destHeight1);
+						$image_name	= $s;
+					}
+				}
+			}
+			  
+			$data_to_store	= array(
+						   'is_sub_admin' 	=> 1,
+						   'first_name' 	=> $first_name,
+						   'last_name' 	=> $last_name,
+						   'email_addres' 	=> $email,
+						   'profile_image' 	=> $image_name,
+						   'user_name' 	=> $user_name,
+						   
+						   'status' 		=> $status,
+						);
+			if($password!="")
+			{
+				$user_det_salt = $this->Users_model->get_user_salt('', $user_name);
+				$user_det_salt = ($user_det_salt) ? $user_det_salt : $this->password_salt;
+				$password=$enc_password 	= crypt($password, $user_det_salt);
+				
+				$data_to_store['pass_word']	=  $password;
+				$data_to_store['password_salt']	=  $user_det_salt;
+			}
+				  
+			$update_subadmin	= $this->common_model->update('membership',$data_to_store,array('id'=>$id));	
+			if($update_subadmin)
+			{
+				$this->common_model->delete('user_permission',array('user_id'=>$id));
+				
+				foreach($menu_permission as $permission)
+				{
+					 $permission_arr 			= (isset($sub_menu_permission[$permission])) ? implode(',',$sub_menu_permission[$permission]) : "";
+					$data_to_store_permission	= array(
+										'user_id' 		=> $id,
+										'menu_id' 		=> $permission,
+										'menu_elements' 	=> $permission_arr,
+										'status' 			=> 1,
+									);
+					$this->common_model->add('user_permission',$data_to_store_permission);
+				}
+				foreach($sub_menu_permission as $key => $sub_permission)
+				{
+					$permission_str			= (isset($sub_permission)) ? implode(',',$sub_permission) : "";
+					$data_to_store_permission_sub	= array(
+										'user_id' 		=> $id,
+										'menu_id' 		=> $key,
+										'menu_elements' 	=> $permission_str,
+										'status' 			=> 1,
+									);
+					$this->common_model->add('user_permission',$data_to_store_permission_sub);
+				}
+					$this->session->set_flashdata('flash_message', 'subadmin_updated');
+			}
+			else{
+				$this->session->set_flashdata('flash_message', 'subadmin_not_updated');
+			}
+			  
+				redirect('control/manage-subadmin');
+		  }
+		
+		$data['view_link'] = 'admin/subadmin/edit_subadmin';
+		$this->load->view('includes/template', $data);
+	}
+	
+	public function delete()
+	{
+		$user_id = ($this->session->userdata('user_id_lovearchitect')) ?  $this->session->userdata('user_id_lovearchitect') : 0;
+		$setting_data 					= $this->Myaccount_model->get_account_data($user_id);
+		
+		$data['data']['setting_data'] 	= $setting_data;
+		$data['data']['settings'] 		= $this->Sitesetting_model->get_settings();
+		
+		$id = $this->uri->segment(4);
+		$profile_image=$this->common_model->get('membership',array('*'),array('id'=>$id));
+		if(isset($profile_image) && count($profile_image)>0)
+		{
+			if(file_exists(realpath('subadmin_image/'.$profile_image[0]['profile_image'])))
+			{
+			unlink(realpath('subadmin_image/'.$profile_image[0]['profile_image']));
+			}
+			if(file_exists(realpath('subadmin_image/thumb/'.$profile_image[0]['profile_image'])))
+			{
+			unlink(realpath('subadmin_image/thumb/'.$profile_image[0]['profile_image']));
+			}
+		}
+        if($this->common_model->delete('membership',array('id'=>$id)) == TRUE && $this->common_model->delete('user_permission',array('user_id'=>$user_id)) == TRUE)
+		{
+			$this->session->set_flashdata('flash_message', 'subadmin_deleted');
+		}
+		else
+		{
+			$this->session->set_flashdata('flash_message', 'subadmin_not_deleted');
+		}
+			redirect('control/manage-subadmin');
+	}	
+}
+?>

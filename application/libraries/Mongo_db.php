@@ -257,7 +257,7 @@ Class Mongo_db{
 
 		try
 		{
-			$this->db->{$collection}->insert($insert, array('w' => $this->write_concerns, 'j'=>$this->journal));
+			$this->db->{$collection}->insertOne($insert, array('w' => $this->write_concerns, 'j'=>$this->journal));
 			if (isset($insert['_id']))
 			{
 				return ($insert['_id']);
