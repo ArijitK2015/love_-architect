@@ -98,7 +98,7 @@ class Admin_dashboard extends CI_Controller {
 		$this->data['pkeys']			= $this->pkeys;
 		$this->data['site_logo']			= $this->site_logo;
 		
-		$user_id 						= $merchant_id = ($this->session->userdata('user_id_hotcargo')) ?  $this->session->userdata('user_id_hotcargo') : 1;	
+		$user_id 						= $merchant_id = ($this->session->userdata('user_id_lovearchitect')) ?  $this->session->userdata('user_id_lovearchitect') : 1;	
 			
 		if(!empty($this->cmp_auth_id)){
 			$admin_details 			= $this->myaccount_model->get_account_data($user_id, 1);
@@ -115,7 +115,7 @@ class Admin_dashboard extends CI_Controller {
 		if(!empty($user_session_data))
 		{
 			$admin_login_session		= $this->session->userdata('admin_login_session');
-			$logged_in_user_id			= $this->session->userdata('user_id_hotcargo');
+			$logged_in_user_id			= $this->session->userdata('user_id_lovearchitect');
 			$is_merchant				= $this->session->userdata('is_merchant');
 			$is_superadmin				= $this->session->userdata('is_superadmin');
 				
@@ -150,7 +150,7 @@ class Admin_dashboard extends CI_Controller {
 		$data['data']					= $this->data;
 		
 		//getting dealers id
-		$user_id 						= $dealer_id = ($this->session->userdata('user_id_hotcargo')) ?  $this->session->userdata('user_id_hotcargo') : 0;
+		$user_id 						= $dealer_id = ($this->session->userdata('user_id_lovearchitect')) ?  $this->session->userdata('user_id_lovearchitect') : 0;
 		
 		if(!empty($this->cmp_auth_id))
 			$admin_details 			= $this->myaccount_model->get_account_data($user_id, 1);

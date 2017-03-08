@@ -16,7 +16,7 @@ class User extends MY_Controller {
 		
 	function index()
 	{
-		
+			
 	}
 
 	/**
@@ -290,8 +290,8 @@ class User extends MY_Controller {
 					
 				$user_data 	= array(
 								'admin_login_session' 	=> 1,
-								'user_id_lovearchitect'	=> $user_id,
-								'user_name_lovearchitect' 	=> $site_title,
+								'user_id_hotcargo' 		=> $user_id,
+								'user_name_hotcargo' 	=> $site_title,
 								'is_merchant' 			=> 1,
 								'is_superadmin' 		=> 0,
 								'is_logged_in' 		=> true
@@ -307,23 +307,16 @@ class User extends MY_Controller {
 			}	
 		}
 		else{
-		
-			
-			$user_det_salt = $this->Users_model->get_user_salt('', $user_name);
-			$user_det_salt = ($user_det_salt) ? $user_det_salt : $this->password_salt;
-			$enc_password 	= crypt($password, $user_det_salt);
-			
-			
-			$user_id 			= $this->Users_model->validate($user_name, (string)$enc_password);
+			$user_id 			= $this->Users_model->validate($user_name, $password);
 				
-			if((string)$user_id!=0)
+			if($user_id!=0)
 			{
-				$users_details = $this->common_model->get('membership', array(), array('_id' => (string)$user_id));
+				$users_details = $this->common_model->get('membership', array(), array('id' => $user_id));
 					
 				$data 		= array(
 								'admin_login_session' 	=> 1,
-								'user_id_lovearchitect' 		=> (string)$user_id,
-								'user_name_lovearchitect' 	=> $users_details[0]['user_name'],
+								'user_id_hotcargo' 		=> $user_id,
+								'user_name_hotcargo' 	=> $users_details[0]['user_name'],
 								'is_merchant' 			=> 0,
 								'is_superadmin' 		=> 1,
 								'is_logged_in' 		=> true
@@ -358,8 +351,8 @@ class User extends MY_Controller {
 		{
 			
 			
-			$users_details = $this->common_model->get('membership',array('*'),array('_id'=>$is_valid));
-			//$users_details = $this->common_model->get('membership',array('*'),array('status'=>'Y','_id'=>$is_valid));
+			$users_details = $this->common_model->get('membership',array('*'),array('id'=>$is_valid));
+			//$users_details = $this->common_model->get('membership',array('*'),array('status'=>'Y','id'=>$is_valid));
 																		 
 			$phone_number=isset($users_details[0]['phone_number']) ? $users_details[0]['phone_number'] :'';
 			$country_id=isset($users_details[0]['country_id']) ? $users_details[0]['country_id'] :'';
@@ -379,7 +372,7 @@ class User extends MY_Controller {
 	function pre_resend_code()
 	{
 		$id= $this->input->get('users_id');
-		$users_details = $this->common_model->get('membership',array('*'),array('_id'=>$id));
+		$users_details = $this->common_model->get('membership',array('*'),array('id'=>$id));
 		if(count($users_details)>0)
 		{
 			$phone_number=isset($users_details[0]['phone_number']) ? $users_details[0]['phone_number'] :'';

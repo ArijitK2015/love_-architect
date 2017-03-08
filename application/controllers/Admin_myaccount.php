@@ -96,7 +96,7 @@ class Admin_myaccount extends MY_Controller {
 			
 			if ($this->form_validation->run())
 			{
-				$this->mongo_db->where(array('email_addres' => trim($this->input->post('email_addres'))))->where_ne('id', (string)$user_id);
+				$this->mongo_db->where(array('email_addres' => trim($this->input->post('email_addres'))))->where_ne('_id', (string)$user_id);
 				$chek_exist = $this->mongo_db->count('membership');
 				
 				if($chek_exist == 0)

@@ -369,17 +369,6 @@ $route['control/manage-merchants']								= 'Manage_merchant_controller/index';
 $route['control/manage-merchants/add']							= 'Manage_merchant_controller/add';
 $route['control/manage-merchants/edit']						   	= 'Manage_merchant_controller/updt';
 $route['control/manage-merchants/delete/(:any)']					= 'Manage_merchant_controller/delete';
-
-
-//for manage sub-admin
-$route['control/manage-subadmin'] = 'Subadmin/index';
-$route['control/manage-subadmin/(:num)'] = 'Subadmin/index';
-$route['control/user_name_chk'] = 'Subadmin/user_name_chk';
-$route['control/manage-subadmin/add'] = 'Subadmin/add';
-$route['control/manage-subadmin/edit/(:any)'] = 'Subadmin/update/$1';
-$route['control/manage-subadmin/delete/(:any)'] = 'Subadmin/delete/$1';
-$route['control/manage-subadmin/search/(:any)/:num'] = 'Subadmin/search';
-
 //End
 
 $route['uber_rush_api_check']									= 'Customer_signup_controllers/uber_rush_api_check';

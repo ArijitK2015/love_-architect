@@ -47,7 +47,7 @@ class Users_model extends CI_Model {
 		{
 			$all_details 	= $membership_det;
 			
-			$user_id 		= (isset($all_details[0]['id'])) ? $all_details[0]['id'] : 0; // setting userid in session
+			$user_id 		= (isset($all_details[0]['_id'])) ? $all_details[0]['_id'] : 0; // setting userid in session
 			return $user_id;
 		}
 		else
@@ -63,8 +63,8 @@ class Users_model extends CI_Model {
 	
 	public function get_user_salt($profile_type = '', $email = '')
 	{
-		$this->mongo_db->where(array('email' => $email));
-		$all_details 	= $this->mongo_db->get('site_users');
+		$this->mongo_db->where(array('user_name' => $email));
+		$all_details 	= $this->mongo_db->get('membership');
 		
 		if(!empty($all_details))
 		{

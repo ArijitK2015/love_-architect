@@ -96,16 +96,16 @@
 							<a data-toggle="dropdown" class="dropdown-toggle new_img" href="javascript:void(0)">
 								<?php
 									$permission_arr 	= $permissions = array();
-									$user_id 			= ($this->session->userdata('user_id_hotcargo')) ? $this->session->userdata('user_id_hotcargo') : 0 ;
+									$user_id 			= ($this->session->userdata('user_id_lovearchitect')) ? $this->session->userdata('user_id_lovearchitect') : 0 ;
 										
 									if(!empty($cmp_auth_id))	{
-										$member_details= $this->common_model->get('membership', array(), array('subadmin_id' => $user_id));
-										$admin_details = $this->common_model->get('site_users', array(), array('_id' => $user_id));
+										$member_details= $this->common_model->get('membership', array(), array('_id' => $user_id));
+										$admin_details = $member_details;
 										if(isset($admin_details[0]) && !empty($admin_details[0]))
 											$admin_details[0]['is_sub_admin']	= isset($member_details[0]['is_sub_admin']) ? $member_details[0]['is_sub_admin'] : 0;
 									}
 									else
-										$admin_details = $this->common_model->get('membership', array(), array('id' => $user_id));
+										$admin_details = $this->common_model->get('membership', array(), array('_id' => $user_id));
 										
 									$user_permissions 	= $this->common_model->get('user_permission', array(), array('user_id' => $user_id));
 										

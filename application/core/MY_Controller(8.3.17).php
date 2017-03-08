@@ -34,7 +34,6 @@ class MY_Controller extends CI_Controller {
 		$this->load->model('sitesetting_model');
 		$this->load->model('Users_model');
 		$this->load->model('myaccount_model');
-		$this->load->model('Subadmin_model');
 		$this->load->model('Home_model');
 		$this->load->model('User_email_model');
 		$this->load->library('ImageThumb');
