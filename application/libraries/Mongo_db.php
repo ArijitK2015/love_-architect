@@ -257,7 +257,7 @@ Class Mongo_db{
 
 		try
 		{
-			$this->db->{$collection}->insert($insert, array('w' => $this->write_concerns, 'j'=>$this->journal));
+			$this->db->{$collection}->insertOne($insert, array('w' => $this->write_concerns, 'j'=>$this->journal));
 			if (isset($insert['_id']))
 			{
 				return ($insert['_id']);
@@ -414,8 +414,14 @@ Class Mongo_db{
 			}
 			foreach ($wheres as $wh => $val)
 			{
-				if ($wh == '_id')
-					$this->wheres['$or'][] = (MongoId::isValid($val)) ? array($wh => new MongoId($val)) : array($wh => $val);
+				if ($wh == '_id'){
+					if ($val instanceof \MongoDB\BSON\ObjectID || preg_match('/^[a-f\d]{24}$/i', $val)) 
+						$this->wheres['$or'][] =  array($wh => new MongoDB\BSON\ObjectID($val));
+					else
+						$this->wheres['$or'][] = array($wh => $val);
+						
+					//$this->wheres['$or'][] = (MongoId::isValid($val)) ? array($wh => new MongoId($val)) : array($wh => $val);
+				}
 				else
 					$this->wheres['$or'][] = array($wh=>$val);
 					
@@ -449,8 +455,15 @@ Class Mongo_db{
 		{
 			$this->_w($field);
 			
-			if ($field == '_id')
-				$this->wheres[$field]['$in'] = (MongoId::isValid($in)) ? new MongoId($in) : $in;
+			if ($field == '_id'){
+					
+				if ($in instanceof \MongoDB\BSON\ObjectID || preg_match('/^[a-f\d]{24}$/i', $in)) 
+					$this->wheres[$field]['$in'] = new MongoDB\BSON\ObjectID($in);
+				else
+					$this->wheres[$field]['$in'] = $in;
+					
+				//$this->wheres[$field]['$in'] = (MongoId::isValid($in)) ? new MongoId($in) : $in;
+			}
 			else
 				$this->wheres[$field]['$in'] = $in;
 			
@@ -483,8 +496,15 @@ Class Mongo_db{
 		{
 			$this->_w($field);
 			
-			if ($field == '_id')
-				$this->wheres[$field]['$all'] = (MongoId::isValid($in)) ? new MongoId($in) : $in;
+			if ($field == '_id'){
+					
+				if ($in instanceof \MongoDB\BSON\ObjectID || preg_match('/^[a-f\d]{24}$/i', $in)) 
+					$this->wheres[$field]['$all'] = new MongoDB\BSON\ObjectID($in);
+				else
+					$this->wheres[$field]['$all'] = $in;
+					
+				//$this->wheres[$field]['$all'] = (MongoId::isValid($in)) ? new MongoId($in) : $in;
+			}
 			else
 				$this->wheres[$field]['$all'] = $in;
 			
@@ -517,8 +537,13 @@ Class Mongo_db{
 		{
 			$this->_w($field);
 			
-			if ($field == '_id')
-				$this->wheres[$field]['$nin'] = (MongoId::isValid($in)) ? new MongoId($in) : $in;
+			if ($field == '_id'){
+				if ($in instanceof \MongoDB\BSON\ObjectID || preg_match('/^[a-f\d]{24}$/i', $in)) 
+					$this->wheres[$field]['$nin'] = new MongoDB\BSON\ObjectID($in);
+				else
+					$this->wheres[$field]['$nin'] = $in;
+				//$this->wheres[$field]['$nin'] = (MongoId::isValid($in)) ? new MongoId($in) : $in;
+			}
 			else
 				$this->wheres[$field]['$nin'] = $in;
 			
@@ -722,8 +747,13 @@ Class Mongo_db{
 
 		$this->_w($field);
 		
-		if ($field == '_id')
-			$this->wheres[$field]['$ne'] = (MongoId::isValid($x)) ? new MongoId($x) : $x;
+		if ($field == '_id'){
+			if ($x instanceof \MongoDB\BSON\ObjectID || preg_match('/^[a-f\d]{24}$/i', $x)) 
+				$this->wheres[$field]['$ne'] = new MongoDB\BSON\ObjectID($x);
+			else
+				$this->wheres[$field]['$ne'] = $x;
+			//$this->wheres[$field]['$ne'] = (MongoId::isValid($x)) ? new MongoId($x) : $x;
+		}
 		else
 			$this->wheres[$field]['$ne'] = $x;
 		
