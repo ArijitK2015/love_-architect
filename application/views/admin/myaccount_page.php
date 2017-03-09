@@ -58,7 +58,7 @@
 					
 					if($flash_message == 'email_error'){
 						echo'<div class="alert alert-error">';
-						echo'<i class="icon-remove-sign"></i><strong>Error!</strong>. Email id already exist. Please try with different one.';        
+						echo'<i class="icon-remove-sign"></i><strong>Error!</strong>. Email id or username already exist. Please try with different one.';        
 						echo'</div>';
 					}
 					
@@ -88,23 +88,35 @@
 									<div class="form-group ">
 										<label for="firstname" class="control-label col-lg-3">Firstname</label>
 										<div class="col-lg-6">
-											<input class=" form-control" required name="first_name" id="first_name" value="<?php echo htmlentities($myaccount_data[0]['first_name']); ?>" type="text" />
+											<input class=" form-control" required name="first_name" id="first_name" value="<?php echo isset($myaccount_data[0]['first_name']) ? $myaccount_data[0]['first_name'] : ''; ?>" type="text" />
 										</div>
 									</div>
 									<div class="form-group ">
 										<label for="lastname" class="control-label col-lg-3">Lastname</label>
 										<div class="col-lg-6">
-											<input class=" form-control" required name="last_name" id="last_name" value="<?php echo htmlentities($myaccount_data[0]['last_name']); ?>" type="text" />
+											<input class=" form-control" required name="last_name" id="last_name" value="<?php echo isset($myaccount_data[0]['last_name']) ? $myaccount_data[0]['last_name'] : ''; ?>" type="text" />
 										</div>
 									</div>
 								    
 									<div class="form-group ">
 										<label for="email" class="control-label col-lg-3">Email</label>
 										<div class="col-lg-6">
-											<input class="form-control" name="email_addres" id="email_addres" value="<?php echo htmlentities($myaccount_data[0]['email_addres']); ?>" type="text" />
+											<input class="form-control" name="email_addres" id="email_addres" value="<?php echo isset($myaccount_data[0]['email_addres']) ? $myaccount_data[0]['email_addres'] : ''; ?>" type="text" />
 										</div>
 									</div>
-
+									
+									<div class="form-group ">
+										<label for="email" class="control-label col-lg-3">Username</label>
+										<div class="col-lg-6">
+											<input class="form-control" name="user_name" id="user_name" value="<?php echo isset($myaccount_data[0]['user_name']) ? $myaccount_data[0]['user_name'] : ''; ?>" type="text" />
+										</div>
+									</div>
+									
+                                    <?php
+									$sub_admin_stat = isset($myaccount_data[0]['is_sub_admin']) ? $myaccount_data[0]['is_sub_admin'] : '';
+					                if($sub_admin_stat =='0')
+									{
+									?>									
 									<div class="form-group ">
 										<label for="email" class="control-label col-lg-3">Address</label>
 										<div class="col-lg-6">
@@ -117,9 +129,9 @@
 											
 										</script>
 									</div>
-
-
-									
+                                    <?php  
+									}
+									 ?>
 									<div class="form-group">
 										<label class="control-label col-md-3">Profile Image</label>
 										<div class="col-md-9">
@@ -235,7 +247,7 @@
 					phone_number:'please enter the mobile number',
 				}
 			});
-		})
+		});
 	</script>
 	<script>
 		function country_list(str) {

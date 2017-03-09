@@ -97,19 +97,30 @@ class Admin_myaccount extends MY_Controller {
 			if ($this->form_validation->run())
 			{
 				$this->mongo_db->where(array('email_addres' => trim($this->input->post('email_addres'))))->where_ne('_id', (string)$user_id);
-				$chek_exist = $this->mongo_db->count('membership');
+				$chek_exist = $this->mongo_db->count('membership');  
 				
-				if($chek_exist == 0)
+				$this->mongo_db->where(array('user_name' => trim($this->input->post('user_name'))))->where_ne('_id', (string)$user_id);
+				$chek_exist_username = $this->mongo_db->count('membership'); 
+				
+				if($chek_exist == 0 && $chek_exist_username == 0 )
 				{
 					$data_to_store = array(
 						'first_name' 		=> $this->input->post('first_name'),
 						'last_name' 		=> $this->input->post('last_name'),
 						'email_addres' 	=> $this->input->post('email_addres'),
-						'address' 		=> $this->input->post('address'),
+						
 						'search_type'		=> $this->input->post('search_type'),
 						'zip_code'		=> $this->input->post('zip_code'),
 						'search_radious' 	=> $this->input->post('rad_miles'),
 					);
+					$sub_admin_stat = isset($myaccount_data[0]['is_sub_admin']) ? $myaccount_data[0]['is_sub_admin'] : '';
+					if($sub_admin_stat =='0')
+					{
+						$data_to_store['address'] =  trim($this->input->post('address'));
+						
+					}
+					
+					
 					
 					if(isset($_FILES['profile_image']['name']) && (!empty($_FILES['profile_image']['name'])))
 					{

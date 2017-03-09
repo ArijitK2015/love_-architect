@@ -30,9 +30,15 @@ class Subadmin_model extends CI_Model
     
     public function add_subadmin($data_to_store)
     {
-        $insert = $this->mongo_db->insert('membership', $data_to_store);
-		$insert_id = $this->mongo_db->insert_id();
-		return $insert_id;
+        $res = $this->mongo_db->insert('membership', $data_to_store);
+		if($res)
+		{
+			return $res;
+		}
+		else
+		{
+		    return 0;
+		}
     }
     
     public function chk_user_name($new,$old)

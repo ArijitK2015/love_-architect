@@ -98,8 +98,8 @@
                               <thead>
                                <tr>
                                   <th>First Name</th>
-                                  <th>Last Name</th>
-								  <th>Email Address</th>
+                                  
+								           <th>Email Address</th>
                                   <th>User Name</th>
                                   <th style="width:25px";>Profile Image</th>
                                   <th>Status</th>
@@ -111,16 +111,46 @@
 									
 				if((!empty($subadmin)) &&(count($subadmin)>0))
                 {
-                    foreach($subadmin as $row)
+                    foreach($subadmin as $k=>$row)
 					{
 					?>
                     <tr>
-                            <td><?php echo $row['first_name'] ;?></td>
-							<td><?php echo $row['last_name'] ;?></td>
-                            <td><?php echo $row['email_addres'] ;?></td>
-                            <td><?php echo $row['user_name'] ;?></td>
-							<td><center><img src="<?php echo base_url();?>assets/uploads/subadmin_image/<?php echo $row['profile_image']; ?>" style="height:50px; width:50px"></center></td>
-                            <td><?php if($row['status']=='1'){ echo "ACTIVE";} else {echo "INACTIVE";}?></td>
+                            <td><?php $first_name= isset($row['first_name']) ? $row['first_name'] :'';
+									$last_name=  isset($row['last_name']) ? $row['last_name'] :'';
+									 echo ucfirst($first_name).' '.ucfirst($last_name);
+									 ?></td>
+							
+                            <td><?php echo isset($row['email_addres']) ? $row['email_addres'] : '' ;?></td>
+                            <td><?php echo isset($row['user_name']) ? $row['user_name'] : '' ;?></td>
+							<td><center>
+							<?php
+							$profile_image = (isset($row['profile_image']) && $row['profile_image']!='') ? $row['profile_image'] : '';
+							if($profile_image !='')
+							{
+							?>
+							<img src="<?php echo base_url();?>assets/uploads/subadmin_image/thumb/<?php echo $profile_image; ?>" style="height:50px; width:50px">
+							<?php } ?>
+							</center>
+							</td>
+                            <td><?php //if($row['status']=='1'){ echo "ACTIVE";} else {echo "INACTIVE";}
+									 if($row['status']=='1')
+									 {
+									 ?>
+									  <button type="button"  id="btn_stat_change<?php echo (string)$row['_id']; ?>" onclick="change_stat('<?php echo $row['_id'] ?>');" class="btn btn-round btn-success">Active</button>
+									 <?php
+									 }
+									 else
+									 {
+									 ?>
+									   <button type="button"  id="btn_stat_change<?php echo (string)$row['_id']; ?>" onclick="change_stat('<?php echo $row['_id'] ?>');" class="btn btn-round btn-danger">Inactive</button>
+									 <?php
+									 }
+									 ?>
+									 
+									 
+									 <i id="refresh_<?php echo (string)$row['_id']; ?>" style="display:none;margin-left: 5px;"   class="fa fa-spin fa-refresh" aria-hidden="true"></i>
+									 
+									 </td>
                             <td>
                                 <a class="fa fa-edit" href="<?php echo site_url("control").'/manage-subadmin/edit/'.$row['_id']; ?>" onclick="b()" > </a>
 								<a class="fa fa-trash-o" href="javascript:check_confirm('<?php echo $row['_id']?>')"></a>
@@ -152,3 +182,48 @@
   </div>
  </section>
 </section>
+<script>
+function change_stat(Id) {
+	  // var ValueToPass 	= "?id="+Id ;
+	  $('#btn_stat_change'+Id).attr('disabled','disabled');    
+	  $('#refresh_'+Id).show();
+	
+	//  alert(Id);alert(stat);
+	   var urlpass		= '<?php echo base_url(); ?>control/manage-subadmin/change_status';
+	//alert(urlpass);
+	  $.ajax({ 
+		   type: "POST",
+		   url: urlpass,
+			data: {id:Id},
+		   cache: false,
+		   success: function(data){
+			  // alert(data);
+			  
+			   if(data){
+					
+					
+				  if(data == '1') {
+					$('#btn_stat_change'+Id).removeAttr('disabled');
+					$('#refresh_'+Id).hide();
+					$('#btn_stat_change'+Id).removeClass('btn-danger');
+					$('#btn_stat_change'+Id).addClass('btn-success');
+					
+					$('#btn_stat_change'+Id).html('Active');
+					//$('#btn_stat_change'+Id').attr('onclick')='"change_battleground_stat('+Id+',0)"';
+					
+				  }else{
+					$('#btn_stat_change'+Id).removeAttr('disabled');
+					$('#refresh_'+Id).hide();
+				    $('#btn_stat_change'+Id).removeClass('btn-success');
+					  $('#btn_stat_change'+Id).addClass('btn-danger');
+				    $('#btn_stat_change'+Id).html('Inactive');
+					//$('#btn_stat_change'+Id').attr('onclick')='"change_battleground_stat('+Id+',1)"';
+				  }
+			   }
+		   }
+	   });
+	   
+  }
+
+
+</script>

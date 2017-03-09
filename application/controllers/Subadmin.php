@@ -144,11 +144,11 @@ class Subadmin extends MY_Controller {
 					
 					$DIR_IMG_NORMAL 		= FILEUPLOADPATH.'assets/uploads/subadmin_image/';
 					$filename 			= substr($_FILES[$var]['name'],strripos($_FILES[$var]['name'],'.'));
-					$s					= "love_architect".time().rand(0,20).$filename;
+					$s					= time().rand(0,20).$filename;
 					$fileNormal 			= $DIR_IMG_NORMAL.$s;
 					$file 				= $_FILES[$var]['tmp_name'];
 					list($width, $height) 	= getimagesize($file);
-					
+					//echo $fileNormal.'--?'.$file; die;
 					$result 				= move_uploaded_file($file, $fileNormal);
 					//echo "<pre>";print_r($data_to_store); die;
 					
@@ -165,33 +165,44 @@ class Subadmin extends MY_Controller {
 						//echo "<pre>";print_r($data_to_store); die;	
 							
 							
-							$insert = $this->Subadmin_model->add_subadmin($data_to_store);
-							
+							//$insert = $this->Subadmin_model->add_subadmin($data_to_store);
+							$insert = $this->common_model->add('membership',$data_to_store);
+							//echo $insert; die;
 							
 							if($insert)
 							{
-								foreach($menu_permission as $permission)
+								
+								if(count($menu_permission)>0)
+								{
+								foreach($menu_permission as $k=>$permission)
 								{
 									 $permission_arr 			= (isset($sub_menu_permission[$permission])) ? implode(',',$sub_menu_permission[$permission]) : "";
 									$data_to_store_permission	= array(
-														'user_id' 		=> $insert,
-														'menu_id' 		=> $permission,
+														'user_id' 		=> (string)$insert,
+														'menu_id' 		=> (string)$permission,
 														'menu_elements' 	=> $permission_arr,
-														'status' 			=> 1,
+														'status' 			=> "1",
 													);
+									
+									//echo "<pre>";print_r($data_to_store_permission);die;
 									$this->common_model->add('user_permission',$data_to_store_permission);
 								}
-								foreach($sub_menu_permission as $key=>$sub_permission)
+								}
+								
+								if(count($sub_menu_permission)>0)
 								{
-									$permission_str			= (isset($sub_permission)) ? implode(',',$sub_permission) : "";
-									$data_to_store_permission	= array(
-														'user_id' 		=> $insert,
-														'menu_id' 		=> $key,
-														'menu_elements' 	=> $permission_str,
-														'status' 			=> 1,
-													);
-									$this->common_model->add('user_permission',$data_to_store_permission);
-								}
+									foreach($sub_menu_permission as $key=>$sub_permission)
+									{
+										$permission_str			= (isset($sub_permission)) ? implode(',',$sub_permission) : "";
+										$data_to_store_permission	= array(
+															'user_id' 		=> (string)$insert,
+															'menu_id' 		=> (string)$key,
+															'menu_elements' 	=> $permission_str,
+															'status' 			=> "1",
+														);
+										$this->common_model->add('user_permission',$data_to_store_permission);
+									}
+							    }
 								//exit;
 							//	$password_txt	= 'This is the auto generated password  '.$password;
 							//	$subject		= 'Welcome to Graphic election center';
@@ -267,6 +278,8 @@ class Subadmin extends MY_Controller {
 							//  // exit;
 							//    $this->Email_model->send_email($to_email, $message_subject, $message_content, '', '', '', $to_subadmin);
 							    $this->session->set_flashdata('flash_message', 'subadmin_added');
+								
+								redirect('control/manage-subadmin');
 							}
 							else
 							{
@@ -295,7 +308,14 @@ class Subadmin extends MY_Controller {
 		
 		
 		$id 				= $this->uri->segment(4);
-		$data['subadmin'] 	= $this->common_model->get('membership',array('*'),array('_id'=>$user_id));
+		$data['subadmin'] =$membership_det	= $this->common_model->get('membership',array('*'),array('_id'=>$id));
+		if(count($membership_det)==0)
+		{
+			redirect('control/manage-subadmin');
+			
+		}
+		
+		
 		//$data['userdata'] 	= $this->common_model->get('menu',array('*'),array('parent_id' => 0,'menu_type'=>0),null,null,null,null,'title','asc');
 		//$data['userdata'] =$this->db->where('id !=',4)->where('id !=',10)->where('parent_id',0)->where('menu_type',0)->order_by('title','asc')->get('menu')->result_array();
 		$this->mongo_db->where(array('menu_type'=>'0','is_subadmin'=>'1','status'=>'1','parent_id'=>'0'));
@@ -320,6 +340,23 @@ class Subadmin extends MY_Controller {
 			//print_r($sub_menu_permission);
 			//echo "</pre>";
 			//die;
+			
+			$this->mongo_db->where(array('email_addres'=>$email))->where_ne('_id',(string)$id);
+			$res1=$this->mongo_db->get('membership');
+			
+			$this->mongo_db->where(array('user_name'=>(string)$user_name))->where_ne('_id',(string)$id);
+			$res2=$this->mongo_db->get('membership');
+			if(count($res1)>0  || count($res2)>0)
+			{
+				$this->session->set_flashdata('flash_message', 'subadmin_not_updated');
+				 redirect('control/manage-subadmin');
+				
+			}
+			
+			//echo "<pre>";print_r($res1); print_r($res2);die;
+			
+			
+			
 			if($_FILES[$var]["name"]!='')
 			{
 				if ( ($_FILES[$var]["type"] 	== "image/jpeg") ||
@@ -333,7 +370,7 @@ class Subadmin extends MY_Controller {
 				{
 					$DIR_IMG_NORMAL 	= FILEUPLOADPATH.'/assets/uploads/subadmin_image/';
 					$filename 		= substr($_FILES[$var]['name'],strripos($_FILES[$var]['name'],'.'));
-					$s				= "love_architect".time().$filename;	
+					$s				= time().rand(0,20).$filename;	
 					$fileNormal 		= $DIR_IMG_NORMAL.$s;
 					$file 			= $_FILES[$var]['tmp_name'];
 					
@@ -365,7 +402,7 @@ class Subadmin extends MY_Controller {
 			}
 			  
 			$data_to_store	= array(
-						   'is_sub_admin' 	=> 1,
+						   'is_sub_admin' 	=> '1',
 						   'first_name' 	=> $first_name,
 						   'last_name' 	=> $last_name,
 						   'email_addres' 	=> $email,
@@ -383,34 +420,45 @@ class Subadmin extends MY_Controller {
 				$data_to_store['pass_word']	=  $password;
 				$data_to_store['password_salt']	=  $user_det_salt;
 			}
-				  
-			$update_subadmin	= $this->common_model->update('membership',$data_to_store,array('id'=>$id));	
+				 // echo "<pre>";echo $id;print_r($data_to_store);die;
+			$update_subadmin	= $this->common_model->update('membership',$data_to_store,array('_id'=>(string)$id));	
 			if($update_subadmin)
 			{
-				$this->common_model->delete('user_permission',array('user_id'=>$id));
-				
-				foreach($menu_permission as $permission)
+				if($this->common_model->delete('user_permission',array('user_id'=>$id)) ==TRUE )
+				//echo "Deleted";
+				//
+				//die;
+				if(count($menu_permission)>0)
+				{
+				foreach($menu_permission as $k=>$permission)
 				{
 					 $permission_arr 			= (isset($sub_menu_permission[$permission])) ? implode(',',$sub_menu_permission[$permission]) : "";
+					//echo $permission_arr;die;
+					
 					$data_to_store_permission	= array(
-										'user_id' 		=> $id,
-										'menu_id' 		=> $permission,
+										'user_id' 		=> (string)$id,
+										'menu_id' 		=> (string)$permission,
 										'menu_elements' 	=> $permission_arr,
-										'status' 			=> 1,
+										'status' 			=> '1',
 									);
 					$this->common_model->add('user_permission',$data_to_store_permission);
 				}
-				foreach($sub_menu_permission as $key => $sub_permission)
-				{
-					$permission_str			= (isset($sub_permission)) ? implode(',',$sub_permission) : "";
-					$data_to_store_permission_sub	= array(
-										'user_id' 		=> $id,
-										'menu_id' 		=> $key,
-										'menu_elements' 	=> $permission_str,
-										'status' 			=> 1,
-									);
-					$this->common_model->add('user_permission',$data_to_store_permission_sub);
 				}
+				
+				if(count($sub_menu_permission)>0)
+				{
+					foreach($sub_menu_permission as $key => $sub_permission)
+					{
+						$permission_str			= (isset($sub_permission)) ? implode(',',$sub_permission) : "";
+						$data_to_store_permission_sub	= array(
+											'user_id' 		=> (string)$id,
+											'menu_id' 		=> (string)$key,
+											'menu_elements' 	=> $permission_str,
+											'status' 			=> "1",
+										);
+						$this->common_model->add('user_permission',$data_to_store_permission_sub);
+					}
+			    }
 					$this->session->set_flashdata('flash_message', 'subadmin_updated');
 			}
 			else{
@@ -426,13 +474,9 @@ class Subadmin extends MY_Controller {
 	
 	public function delete()
 	{
-		$user_id = ($this->session->userdata('user_id_lovearchitect')) ?  $this->session->userdata('user_id_lovearchitect') : 0;
-		$setting_data 					= $this->Myaccount_model->get_account_data($user_id);
 		
-		$data['data']['setting_data'] 	= $setting_data;
-		$data['data']['settings'] 		= $this->Sitesetting_model->get_settings();
 		
-		$id = $this->uri->segment(4);
+		$id = $user_id=$this->uri->segment(4);
 		$profile_image=$this->common_model->get('membership',array('*'),array('_id'=>$id));
 		if(isset($profile_image) && count($profile_image)>0)
 		{
@@ -445,7 +489,7 @@ class Subadmin extends MY_Controller {
 			unlink(realpath('subadmin_image/thumb/'.$profile_image[0]['profile_image']));
 			}
 		}
-        if($this->common_model->delete('membership',array('id'=>$id)) == TRUE && $this->common_model->delete('user_permission',array('user_id'=>$user_id)) == TRUE)
+        if($this->common_model->delete('membership',array('_id'=>$id)) == TRUE && $this->common_model->delete('user_permission',array('user_id'=>$user_id)) == TRUE)
 		{
 			$this->session->set_flashdata('flash_message', 'subadmin_deleted');
 		}
@@ -454,6 +498,31 @@ class Subadmin extends MY_Controller {
 			$this->session->set_flashdata('flash_message', 'subadmin_not_deleted');
 		}
 			redirect('control/manage-subadmin');
-	}	
+	}
+	
+	public function change_status()
+	{
+		$user_object_id = $this->input->post('id');
+		
+		$this->mongo_db->where(array('_id'=>(string)$user_object_id));
+		$res=$this->mongo_db->get('membership');
+		
+		$current_status = isset($res[0]['status']) ? $res[0]['status'] : '';
+		
+		if($current_status !="")
+		{	$new_status= ($current_status=='1')? '0' : '1'; 
+			//echo $current_status;
+			$data_to_update= array(
+								   'status' => $new_status
+								   );
+			if($this->common_model->update('membership',$data_to_update,array('_id'=>(string)$user_object_id)) == TRUE)
+			{
+				echo $new_status;
+			}
+		}
+		
+	}
+	
+	
 }
 ?>

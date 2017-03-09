@@ -49,14 +49,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | Examples:	my-controller/index	-> my_controller/index
 |		my-controller/my-method	-> my_controller/my_method
 */
-//$route['default_controller'] 								= 'welcome';
+$route['default_controller'] 								= 'welcome';
 //$route['404_override'] 									= '';
 //$route['translate_uri_dashes'] 								= FALSE;
 
 
 //$route['default_controller'] 								= 'Home_controllers/index';
 //$route['default_controller']								= 'Customer_signup_controllers/index';
-$route['default_controller']									= 'User/index';
+//$route['default_controller']									= 'User/index';
 $route['control/login'] 										= 'User/index';
 $route['(:any)/control/login'] 								= 'User/index';
 $route['login'] 									         	= 'Home_controllers/index';
@@ -380,6 +380,7 @@ $route['control/manage-subadmin/edit/(:any)'] = 'Subadmin/update/$1';
 $route['control/manage-subadmin/delete/(:any)'] = 'Subadmin/delete/$1';
 $route['control/manage-subadmin/search/(:any)/:num'] = 'Subadmin/search';
 
+$route['control/manage-subadmin/change_status'] = 'Subadmin/change_status';
 //End
 
 $route['uber_rush_api_check']									= 'Customer_signup_controllers/uber_rush_api_check';

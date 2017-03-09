@@ -14,14 +14,14 @@
                                 <div class="form-group ">
                                     <label for="f_name" class="control-label col-lg-3">First Name:</label>
                                     <div class="col-lg-6">
-                                        <input class=" form-control" id="f_name" required name="f_name" value="<?php echo $subadmin[0]['first_name']; ?>" type="text"/>
+                                        <input class=" form-control" id="f_name" required name="f_name" value="<?php echo isset($subadmin[0]['first_name']) ? $subadmin[0]['first_name'] :'' ; ?>" type="text"/>
                                      </div>
                                 </div>
                                 
                                 <div class="form-group ">
                                     <label for="l_name" class="control-label col-lg-3">Last Name:</label>
                                         <div class="col-lg-6">
-                                            <input class=" form-control" id="l_name" required name="l_name" value="<?php echo $subadmin[0]['last_name']; ?>" type="text"/>
+                                            <input class=" form-control" id="l_name" required name="l_name" value="<?php echo isset($subadmin[0]['last_name']) ? $subadmin[0]['last_name'] :''; ?>" type="text"/>
                                         </div>
                                 </div>
                                                     
@@ -29,7 +29,7 @@
                                         <label for="a_email" class="control-label col-lg-3">Email:</label>
                                         <div class="col-lg-6">
                                             <input type="hidden" id="hdn_email" name="hdn_email" value=''>
-                                            <input class=" form-control" required maxlength="40" id="a_email" name="a_email" value="<?php echo $subadmin[0]['email_addres'];?> " type="email" onkeyup="email_check();"/>
+                                            <input class=" form-control" required maxlength="40" id="a_email" name="a_email" value="<?php echo isset($subadmin[0]['email_addres']) ? $subadmin[0]['email_addres'] : '' ;?> " type="email" />
                                             <div class="error_a_email" id="error_a_email" style="color: #B94A48;"></div>
                                         </div>
                                 </div>
@@ -39,7 +39,14 @@
 										<div class="col-md-9">
 											<div class="fileupload" data-provides="fileupload">
 												<div class="fileupload-preview fileupload-exists thumbnail" style="max-width: 200px; max-height: 150px; line-height: 20px;">
-												 <img src="<?php echo base_url();?>assets/uploads/subadmin_image/<?php echo $subadmin[0]['profile_image'];?>">
+												<?php  $profile_image = isset($subadmin[0]['profile_image']) ? $subadmin[0]['profile_image'] : '';
+												if($profile_image !='')
+												{
+												?>
+												 <img src="<?php echo base_url();?>assets/uploads/subadmin_image/<?php echo $profile_image;?>">
+												<?php
+												}
+												?>
 												</div>
 											
 											<div>
@@ -59,8 +66,8 @@
                                     <label for="u_name" class="control-label col-lg-3">Username:</label>
                                     <div class="col-lg-6">
                                         <input type="hidden" id="u_hdn" name="u_hdn" value=''>
-                                        <input type="hidden" id="h_user_name" name="h_user_name" value='<?php echo $subadmin[0]['user_name']; ?>'>
-                                        <input class=" form-control" id="u_name" required name="u_name" value="<?php echo $subadmin[0]['user_name']; ?>" type="text" onkeyup="username_check();"/>
+                                        <input type="hidden" id="h_user_name" name="h_user_name" value='<?php echo  isset($subadmin[0]['user_name']) ? $subadmin[0]['user_name'] : '' ; ?>'>
+                                        <input class=" form-control" id="u_name" required name="u_name" value="<?php echo isset($subadmin[0]['user_name']) ? $subadmin[0]['user_name'] : ''; ?>" type="text" />
                                         <div class="username_error" id="username_error" style="color: #B94A48;"></div>
                                     </div>
                                 </div>
@@ -69,15 +76,15 @@
 										<label for="short_desc" class="control-label col-lg-3">Password</label>
 											<div class="col-lg-6">
 												<div class="input-append">
-												<input readonly="" value="" name="password" maxlength="20" id="password" class="form-control" type="password" placeholder="******">
-													<span class=" input-group-btn add-on">
+												<input  value="" name="password" maxlength="20" id="password" class="form-control" type="password">
+													<!--<span class=" input-group-btn add-on">
 													  <button class="btn btn-white" id="btn_pass" type="button" style="padding: 5px; margin-left:54px; color:#666; " onclick="show_pass( 'password', 'btn_pass' )">Change</button>
-													</span>
+													</span>-->
 												</div>
 											</div>
 								</div>
                                 
-								<div class="form-group" id="cpass" style="display: none;">
+								<div class="form-group" id="cpass">
 									   <label for="password" class="control-label col-lg-3">Confirm Password:</label>
 									   <div class="col-lg-6">
 										  <input class=" form-control"  maxlength="20" id="cpassword" name="cpassword" value="" type="password"/>
@@ -88,8 +95,8 @@
                                     <label for="ccomment" class="control-label col-lg-3">Status:</label>
                                         <div class="col-lg-6">
                                             <select class="form-control valid" style="width: 300px" id="status" name="status">
-                                                <option value="1" <?php if($subadmin[0]['status']=='1'){?> selected="selected"  <?php }?>>Active</option>
-                                                <option value="0" <?php if($subadmin[0]['status']=='0'){?> selected="selected"  <?php }?>>Inactive</option>
+                                                <option value="1" <?php if(isset($subadmin[0]['status']) && $subadmin[0]['status']=='1'){?> selected="selected"  <?php }?>>Active</option>
+                                                <option value="0" <?php if(isset($subadmin[0]['status']) && $subadmin[0]['status']=='0'){?> selected="selected"  <?php }?>>Inactive</option>
                                             </select>
                                             <div id='error_message'></div>
                                         </div>
@@ -123,13 +130,15 @@
 														<div class="tree-folder-name">
 																
 															<input id="management_<?php echo $user_menu['id'];?>" name="management[]" value="<?php echo $user_menu['id'];?>" style="width: 20px;display: inline-block;vertical-align: middle;" type="checkbox" <?php if(isset($subadmin_permission) && (count($subadmin_permission) > 0) ){echo "checked";};?>
-										onclick="check_all_boxes('<?php echo $user_menu['id'];?>','menu','')"><?php echo $user_menu['title'] ;?>
+										<?php if(isset($user_menu['is_default']) && $user_menu['is_default'] =='1'){ ?>onclick="return false;" checked <?php }else{ ?>onclick="check_all_boxes('<?php echo $user_menu['id'];?>','menu','')" <?php } ?> ><?php echo $user_menu['title'] ;?>
 														</div>
 													</div>
 													<?php
-														$ci=& get_instance();
-														$all_sub_menus = $ci->db->where('parent_id',$user_menu['id'])->where('status',1)->get('menu')->result_array();
-														
+														//$ci=& get_instance();
+														//$all_sub_menus = $ci->db->where('parent_id',$user_menu['id'])->where('status',1)->get('menu')->result_array();
+														$this->mongo_db->where(array('menu_type'=>'0','is_subadmin'=>'1','status'=>'1','parent_id'=> (string)$user_menu['id']));
+		                                                                                                $this->mongo_db->order_by(array('title'=>'asc'));
+														$all_sub_menus = $this->mongo_db->get('menus');
 														
 														if(!empty($all_sub_menus))
 														{
@@ -217,15 +226,18 @@
 	   function check_all_boxes(id_tree,type,id)
 	   {
 			 if ( type == "menu" ) {
-				if (id_tree==1 || id_tree==2 || id_tree==3) {
-                if( $( "#management_"+id_tree ).prop( "checked" )==false)
+				//if (id_tree==1 || id_tree==2 || id_tree==3)
+				/*if (id_tree==1 )
+				{
+                                    if( $( "#management_"+id_tree ).prop( "checked" )==false)
 				   {
 					$( "#management_"+id_tree ).prop( "checked",true);	
 						
 				   }
 				   
-                }
-				else{    $("#sub_tree"+id_tree).find('input[type=checkbox]').each(function () {
+                                   }
+				else{*/
+				$("#sub_tree"+id_tree).find('input[type=checkbox]').each(function () {
 						  if($( "#management_"+id_tree ).prop( "checked" )==true)
 						  {
 								this.checked = true;
@@ -233,7 +245,7 @@
 								this.checked = false;
 						  }
 				    });
-			 }
+			    //}
 			 }
 			 if ( type == "item" ) {
 				
@@ -267,12 +279,29 @@
         }
 		$(document).ready(function()
 		{
+			jQuery.validator.addMethod("regex", function(value, element, param)
+		        {
+			if(value.search(/\S/) != -1)
+			 return value.match(new RegExp("." + param + "$"));
+			else
+			return true;
+		     
+		        });
+			
 			$("#editsubadmin").validate({
-				    rules:
-				    {
-						  first_name: 'require',
-						  last_name:  'require',
-						  //a_email: 'require',
+			rules:
+			{
+			         firstname: {  required: true,
+				     regex: "[a-zA-Z ]",
+				 },
+				 lastname:  {  required: true,
+				                regex: "[a-zA-Z ]",   
+				 },
+				 a_email:  {
+						required: true,
+						email: true,
+						  },
+				user_name: {  required: true, },
 						  password: {
 									  minlength: 6
 								},
@@ -287,8 +316,16 @@
 				    },
 				    messages:
 				    {
-					   first_name: 'Please enter your first name',
-					   last_name:   'Please enter your last name',
+					  firstname: {   required: 'Please enter first name',
+				                regex:  'Please enter valid name',
+				 },
+				 lastname:   {   required: 'Please enter last name',
+				                 regex:  'Please enter valid name',
+				 },
+				 a_email: {    required:'Please enter email-id',
+				               email: 'Please enter a valid email',
+				           },
+				user_name: {  required: 'Please enter username', },
 					   //a_email: 'Please enter your email-id',
 					   password:  {
 								    minlength: "Your password must be at least 5 characters long"

@@ -97,17 +97,19 @@
 								<?php
 									$permission_arr 	= $permissions = array();
 									$user_id 			= ($this->session->userdata('user_id_lovearchitect')) ? $this->session->userdata('user_id_lovearchitect') : 0 ;
-										
+									
+									$settings_det 	= $this->common_model->get('settings');
+									$site_title = isset($settings_det[0]['site_name']) ? $settings_det[0]['site_name'] : '';
 									if(!empty($cmp_auth_id))	{
-										$member_details= $this->common_model->get('membership', array(), array('_id' => $user_id));
+										$member_details= $this->common_model->get('membership', array(), array('_id' => (string)$user_id));
 										$admin_details = $member_details;
 										if(isset($admin_details[0]) && !empty($admin_details[0]))
 											$admin_details[0]['is_sub_admin']	= isset($member_details[0]['is_sub_admin']) ? $member_details[0]['is_sub_admin'] : 0;
 									}
 									else
-										$admin_details = $this->common_model->get('membership', array(), array('_id' => $user_id));
+										$admin_details = $this->common_model->get('membership', array(), array('_id' => (string)$user_id));
 										
-									$user_permissions 	= $this->common_model->get('user_permission', array(), array('user_id' => $user_id));
+									$user_permissions 	= $this->common_model->get('user_permission', array('*'), array('user_id' => (string)$user_id));
 										
 									if(!empty($user_permissions))
 										$permission_arr= (isset($user_permissions[0]['menu_ids'])) 	? $user_permissions[0]['menu_ids'] : array();
@@ -119,7 +121,7 @@
 											echo '<img alt="" src="'.main_base_url().'thumb.php?height=40&width=40&type=aspectratio&img='.assets_url().'uploads/dealer_image/thumb/'.$admin_details[0]['profile_image'].'" >';
 										elseif($admin_details[0]['is_sub_admin'] == 1)
 											//echo '<img alt="" src="'.main_base_url().'thumb.php?height=40&width=40&type=aspectratio&img='.assets_url().'uploads/merchant_images/thumb/'.$admin_details[0]['site_logo'].'" >';
-											echo '';
+											echo '<img alt="" src="'.main_base_url().'thumb.php?height=40&width=40&type=aspectratio&img='.assets_url().'uploads/subadmin_image/thumb/'.$admin_details[0]['profile_image'].'">';
 										else
 											echo '<img alt="" src="'.main_base_url().'thumb.php?height=40&width=40&type=aspectratio&img='.assets_url().'uploads/subadmin_image/thumb/'.$admin_details[0]['profile_image'].'">';
 									}
@@ -137,9 +139,11 @@
 										echo '<img alt="" src="'.main_base_url().'thumb.php?height=40&width=40&type=aspectratio&img='.assets_url().'admin/images/avatar1_small.jpg">';
 									}
 									
-									if($admin_details[0]['is_sub_admin'] == 1)
-										echo '<span class="username">'.substr($admin_details[0]['site_title'], 0, 15).'</span>';
-									else
+									$is_sub_admin_stat = isset($admin_details[0]['is_subadmin']) ? $admin_details[0]['is_subadmin'] : '0';
+									//echo "hello".$is_sub_admin_stat;
+									//if($admin_details[0]['is_sub_admin'] == 1)
+									//	echo '<span class="username">'.substr($site_title, 0, 15).'</span>';
+									//else
 										echo '<span class="username">'.ucwords($admin_details[0]['first_name'].' '.$admin_details[0]['last_name']).'</span>';
 								?>
 								
@@ -147,7 +151,7 @@
 							</a>
 							<ul class="dropdown-menu extended logout">
 								<li><a href="<?php echo base_url(); ?>control/myaccount"><i class=" fa fa-suitcase"></i>Profile</a></li>
-								<?php if($admin_details[0]['is_sub_admin'] != 1){ ?>
+								<?php if($admin_details[0]['is_sub_admin'] != 2){ ?>
 								<li><a href="<?php echo base_url(); ?>control/change-password"><i class="fa fa-unlock-alt"></i>Change Password</a></li>
 								<?php } ?>
 								<?php if($admin_details[0]['is_sub_admin'] != 2 && $admin_details[0]['is_sub_admin'] != 1){ ?>
@@ -170,13 +174,17 @@
 					<div class="leftside-navigation">
 						<ul class="sidebar-menu" id="nav-accordion">
 							<?php
-								$all_menus = $this->common_model->get('menus', array(), array('parent_id' => '0', 'menu_type' => '0', 'status' => '1'), null, null, null, null, array('_id' => 'asc'));
+							    if($is_sub_admin_stat=='0')
+								    $all_menus = $this->common_model->get('menus', array(), array('parent_id' => '0', 'menu_type' => '0', 'status' => '1'), null, null, null, null, array('_id' => 'asc'));
+								else
+								   $all_menus = $this->common_model->get('menus', array(), array('parent_id' => '0',"is_subadmin" =>'1', 'menu_type' => '0', 'status' => '1'), null, null, null, null, array('_id' => 'asc'));
+								
 								foreach($all_menus as $menus)
 								{
 									$al_menu_id	= (isset($menus['_id']))	? strval($menus['_id']) : '';
 									$all_sub_menus = $this->common_model->get('menus',  array(), array('parent_id' => $menus['id'], 'status' => '1'));
 										
-									$super 		= (!empty($cmp_auth_id)) 	? 1 : 0;
+									$super 		= ($is_sub_admin_stat)	? 1 : 0;
 										
 									if(in_array($al_menu_id, $permission_arr) || $super == 0)
 									{
@@ -234,3 +242,8 @@
 				</div>
 			</aside>
 			<!--sidebar end-->
+			<script>
+			$(document).ready(function(){
+			$(".alert-error").addClass("alert-danger");
+			});
+			</script>

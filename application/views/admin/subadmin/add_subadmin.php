@@ -20,7 +20,7 @@
                                     <div class="form-group ">
                                         <label for="lastname" class="control-label col-lg-3">Last name:</label>
                                         <div class="col-lg-6">
-                                            <input class=" form-control"  required maxlength="20" id="lastname" name="lastname" value="" type="text"/>
+                                            <input class=" form-control" required  maxlength="20" id="lastname" name="lastname" value="" type="text"/>
                                         </div>
                                     </div>
                                     
@@ -28,7 +28,7 @@
                                         <label for="a_email" class="control-label col-lg-3">Email:</label>
                                         <div class="col-lg-6">
                                             <input type="hidden" id="hdn_email" name="hdn_email" value=''>
-                                            <input class=" form-control" required maxlength="40" id="a_email" name="a_email" value="" type="email" onkeyup="email_check();"/>
+                                            <input class=" form-control" required  maxlength="40" id="a_email" name="a_email" value="" type="email" onkeyup="email_check();"/>
                                             <div class="error_a_email" id="error_a_email" style="color: #B94A48;"></div>
                                         </div>
                                     </div>
@@ -104,7 +104,7 @@
 														<div class="tree-folder-name">	
 															<input id="management_<?php echo $user_menu['id'];?>" name="management[]" value="<?php echo $user_menu['id'];?>" type="checkbox"
 															
-															onclick="check_all_boxes('<?php echo $user_menu['id'];?>','menu','')">
+															<?php if(isset($user_menu['is_default']) && $user_menu['is_default'] =='1'){ ?>onclick="return false;" checked <?php }else{ ?>onclick="check_all_boxes('<?php echo $user_menu['id'];?>','menu','')" <?php } ?> >
 															&nbsp; &nbsp;<?php echo ucfirst($user_menu['title']) ;?>
 														</div>
 													</div>
@@ -239,24 +239,36 @@
 	   
 	   $(document).ready(function()
 	   {
+		 jQuery.validator.addMethod("regex", function(value, element, param) {
+              if(value.search(/\S/) != -1)
+               return value.match(new RegExp("." + param + "$"));
+              else
+              return true;
+           
+           });
+		
 		   $("#addsubadmin").validate({
 			 rules:
 			 {
-				 first_name: 'require',
-				 last_name:  'require',
-				 //a_email: 'require',
-				 subadmin_image: {
-									 required: true,
-									 accept: "image/*"
+				 firstname: {  required: true,
+				               regex: "[a-zA-Z ]",
+				 },
+				 lastname:  {  required: true,
+				                regex: "[a-zA-Z ]",   
+				 },
+				 a_email:  {
+						required: true,
+						email: true,
 						  },
+				user_name: {  required: true, }, 
 				 password: {
 							 required: true,
-							 minlength: 6
+							 minlength: 6,
 						  },
 				cpassword: {
 							 required: true,
 							 minlength: 6,
-							 equalTo:  "#password"
+							 equalTo:  "#password",
 						  },
 				 subadmin_image:  {
 									 required: true,
@@ -265,18 +277,25 @@
 			 },
 			 messages:
 			 {
-				 first_name: 'Please enter your first name',
-				 last_name:   'Please enter your last name',
-				 //a_email: 'Please enter your email-id',
+				firstname: {   required: 'Please enter first name',
+				                regex:  'Please enter valid name',
+				 },
+				 lastname:   {   required: 'Please enter last name',
+				                 regex:  'Please enter valid name',
+				 },
+				 a_email: {    required:'Please enter email-id',
+				               email: 'Please enter a valid email',
+				           },
+				user_name: {  required: 'Please enter username', }, 	   
 				 password:  {
 								required: "Please provide a password",
-								minlength: "Your password must be at least 6 characters long"
+								minlength: "Your password must be at least 6 characters long",
 						  },
 							 
 				 cpassword:  {
 								required: "Please provide a password again",
 								minlength: "Your password must be at least 6 characters long",
-								equalTo: "Please enter the same password as above"
+								equalTo: "Please enter the same password as above",
 						  },			
 							 
 				 subadmin_image:  {
@@ -285,7 +304,7 @@
 						  }
 			 }
 		   });
-	   })
+	   });
 
 	function username_check()
     {

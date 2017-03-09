@@ -17,12 +17,13 @@ class Common_model extends CI_Model {
 	*/
 	function add($table,$data)
 	{
-		$this->mongo_db->insert($table, $data);
+		$res=$this->mongo_db->insert($table, $data);
+		
 		$report = array();
 		
-		if($report !== 0)
+		if($res)
 		{
-			return $this->mongo_db->insert_id();
+			return $res;
 		}
 		else
 		{
@@ -30,16 +31,22 @@ class Common_model extends CI_Model {
 		}
 	}
     
-    function update($table,$data,$condition=null)
+    function update($table,$data,$condition=array())
     {
 	if(isset($condition))
 	{
-	    foreach ($condition as $key => $value)
-	    {
-		$this->mongo_db->where($key,$value);
-	    }
+	    
+		$this->mongo_db->where($condition);
+	    
 	}
-	$this->mongo_db->update($table, $data);
+	if(!empty($data))
+	{
+	    
+		$this->mongo_db->set($data);
+	    
+	}
+	
+	$this->mongo_db->update($table);
 	//echo $this->mongo_db->last_query();
 	//exit;
 	$report = array();
@@ -123,16 +130,26 @@ class Common_model extends CI_Model {
     }
     
     
-    function delete($table,$condition=null)
-    {
-        if(isset($condition))
-	{
-	    foreach ($condition as $key => $value){
-		$this->mongo_db->where($key,$value);
-	    }
-	}
-        $this->mongo_db->delete($table);
-        return true;
+    function delete($table,$condition=array())
+    {    
+        if(!empty($condition))
+		{
+			
+			$this->mongo_db->where($condition);
+			
+		}
+//		if($delete_many)
+//		{
+//			 $this->mongo_db->delete_all($table);
+//		}
+//		else
+//		{
+//        $this->mongo_db->delete($table);
+//		}
+		
+		$this->mongo_db->delete_all($table);
+		return true;
+		
     }
    function get_postcode_list()
 	{

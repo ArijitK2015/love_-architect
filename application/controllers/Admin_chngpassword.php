@@ -25,8 +25,13 @@ class Admin_chngpassword extends MY_Controller {
  
 	}//index
 	
-	function __encrip_password($password) {
-	    return md5($password);
+	function __encrip_password($check_pass_salt,$password) {
+	  //  return md5($password);
+	//            $user_det_salt = $this->Users_model->get_user_salt('', $user_name);
+				$user_det_salt = ($check_pass_salt) ? $check_pass_salt : $this->password_salt;
+				$enc_password 	= crypt($password, $user_det_salt);
+                 return $enc_password;
+	
 	}
 	
 	public function updt()
@@ -46,22 +51,41 @@ class Admin_chngpassword extends MY_Controller {
 			if ($this->form_validation->run())
 			{
 				$old_pass			= $this->input->post('old_pass');
-				$this->mongo_db->where(array('id' => (string)$user_id, 'pass_word' => $old_pass));
-				$check_pass_exist 	= $this->mongo_db->count('membership');
+				$this->mongo_db->where(array('_id' => (string)$user_id));
+				$check_pass_det = $this->mongo_db->get('membership');
+				//echo "<pre>";  print_r($check_pass_det);die;
+				$check_pass_salt = isset($check_pass_det[0]['password_salt']) ? $check_pass_det[0]['password_salt'] : $this->password_salt;
+				$user_old_password = isset($check_pass_det[0]['pass_word']) ? $check_pass_det[0]['pass_word'] : '';
 				
-				if($check_pass_exist > 0)
+				$old_encrypted_pass = $this->__encrip_password($check_pass_salt,$old_pass);
+				if($user_old_password != $old_encrypted_pass)
 				{
-					$data_to_store = array('pass_word' => $this->input->post('cpass'));
-					if($this->Chngpassword_model->update_password($data_to_store, (string)$user_id) == TRUE){
-						$this->session->set_flashdata('flash_message', 'pwd_updated');
-					}else{
-						$this->session->set_flashdata('flash_message', 'pwd_not_updated');
-					}
-				}else
-				{
-					$this->session->set_flashdata('flash_message', 'wrong_password');				
+					$this->session->set_flashdata('flash_message', 'wrong_password');
+					redirect('control/change-password');
 				}
+				else
+				{
+				//echo $old_encrypted_pass;die;
+				//$check_pass_exist 	= $this->mongo_db->count('membership');
 				
+					
+						$n_pass = trim($this->input->post('cpass'));
+						$new_password = $this->__encrip_password($check_pass_salt,$n_pass);
+						$data_to_store = array('pass_word' => $new_password);
+						//if($this->Chngpassword_model->update_password($data_to_store, (string)$user_id) == TRUE){
+						//	$this->session->set_flashdata('flash_message', 'pwd_updated');
+						//}else{
+						//	$this->session->set_flashdata('flash_message', 'pwd_not_updated');
+						//}
+						if($this->common_model->update('membership',$data_to_store, array('_id'=>(string)$user_id)) == TRUE){
+							$this->session->set_flashdata('flash_message', 'pwd_updated');
+						}else{
+							$this->session->set_flashdata('flash_message', 'pwd_not_updated');
+						}
+						redirect('control/change-password');
+						
+					
+				}
 				redirect('control/change-password');
 			}
 			else
