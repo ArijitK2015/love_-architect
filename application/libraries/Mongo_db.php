@@ -243,6 +243,13 @@ Class Mongo_db{
 	*
 	* @usage : $this->mongo_db->insert('foo', $data = array());
 	*/
+	
+	public function isJson($string) {
+		return ((is_string($string) &&
+			   (is_object(json_decode($string)) ||
+			   is_array(json_decode($string))))) ? true : false;
+	}
+	
 	public function insert($collection = "", $insert = array())
 	{
 		if (empty($collection))
@@ -257,10 +264,16 @@ Class Mongo_db{
 
 		try
 		{
-			$this->db->{$collection}->insertOne($insert, array('w' => $this->write_concerns, 'j'=>$this->journal));
-			if (isset($insert['_id']))
+			$data_json 	= $this->db->{$collection}->insertOne($insert, array('w' => $this->write_concerns, 'j'=>$this->journal));
+			$data		= ($this->isJson($data_json))		? json_decode($data_json) : $data_json;
+				
+			if (is_object($data) && isset($data->insertedId))
 			{
-				return ($insert['_id']);
+				return (string) $data->insertedId;
+			}
+			elseif(is_array($data) && isset($data['insertedId']))
+			{
+				return ($data['insertedId']);
 			}
 			else
 			{
@@ -301,10 +314,15 @@ Class Mongo_db{
 		}
 		try
 		{
-			$this->db->{$collection}->insertMany($insert, array('w' => $this->write_concerns, 'j'=>$this->journal));
-			if (isset($insert['_id']))
+			$data_json 	= $this->db->{$collection}->insertMany($insert, array('w' => $this->write_concerns, 'j'=>$this->journal));
+			$data		= ($this->isJson($data_json))		? json_decode($data_json) : $data_json;
+				
+			if (is_object($data) && isset($data->insertedIds))
 			{
-				return ($insert['_id']);
+				return ($data->insertedIds);
+			}
+			elseif(is_array($data) && isset($data['insertedIds'])){
+				return ($data['insertedIds']);
 			}
 			else
 			{
@@ -1409,7 +1427,7 @@ Class Mongo_db{
 		}
 		try
 		{
-			$this->db->{$collection}->remove($this->wheres, array('w' => $this->write_concerns, 'j'=>$this->journal, 'justOne' => TRUE));
+			$this->db->{$collection}->deleteOne($this->wheres, array('w' => $this->write_concerns, 'j'=>$this->journal, 'justOne' => TRUE));
 			$this->_clear();
 			return (TRUE);
 		}
@@ -1448,7 +1466,7 @@ Class Mongo_db{
 		}*/
 		try
 		{
-			$this->db->{$collection}->remove($this->wheres, array('w' => $this->write_concerns, 'j'=>$this->journal, 'justOne' => FALSE));
+			$this->db->{$collection}->deleteMany($this->wheres, array('w' => $this->write_concerns, 'j'=>$this->journal, 'justOne' => FALSE));
 			$this->_clear();
 			return (TRUE);
 		}
