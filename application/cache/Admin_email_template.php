@@ -120,8 +120,8 @@ class Admin_email_template extends MY_Controller {
                 );
             
             
-			if($this->email_template_model->update_template($id, $data_to_store,$tablename) == TRUE)
-			{
+           if($this->email_template_model->update_template($id, $data_to_store,$tablename) == TRUE)
+           {
                     $this->session->set_flashdata('flash_message', 'pages_updated');
             }else
             {

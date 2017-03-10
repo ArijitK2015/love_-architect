@@ -108,13 +108,15 @@
 						<div class="col-lg-6">
 				    <?php
 				    $all_manage_arr=array();
+				    //echo "<pre>"; print_r($userdata);die;
+				    
 				    if(isset($userdata) && $userdata!="")
 				    {
 						  echo '<div class="tree tree-plus-minus">';
 						  foreach($userdata as $user_menu)
 						  {
 								$id 					= $this->uri->segment(4);
-								$subadmin_permission 		= $this->common_model->get('user_permission',array('*'),array('user_id'=>$id,'menu_id'=>$user_menu['id']));
+								$subadmin_permission 		= $this->common_model->get('user_permission',array('*'),array('user_id'=>$id,'menu_id'=>$user_menu['_id']));
 								
 								$subadmin_permission_add 	= array();
 								
@@ -129,25 +131,25 @@
 														<i class="fa fa-arrow-circle-right" style="vertical-align: baseline;"></i>
 														<div class="tree-folder-name">
 																
-															<input id="management_<?php echo $user_menu['id'];?>" name="management[]" value="<?php echo $user_menu['id'];?>" style="width: 20px;display: inline-block;vertical-align: middle;" type="checkbox" <?php if(isset($subadmin_permission) && (count($subadmin_permission) > 0) ){echo "checked";};?>
-										<?php if(isset($user_menu['is_default']) && $user_menu['is_default'] =='1'){ ?>onclick="return false;" checked <?php }else{ ?>onclick="check_all_boxes('<?php echo $user_menu['id'];?>','menu','')" <?php } ?> ><?php echo $user_menu['title'] ;?>
+															<input id="management_<?php echo $user_menu['_id'];?>" name="management[]" value="<?php echo $user_menu['_id'];?>" style="width: 20px;display: inline-block;vertical-align: middle;" type="checkbox" <?php if(isset($subadmin_permission) && (count($subadmin_permission) > 0) ){echo "checked";};?>
+										<?php if(isset($user_menu['is_default']) && $user_menu['is_default'] =='1'){ ?>onclick="return false;" checked <?php }else{ ?>onclick="check_all_boxes('<?php echo $user_menu['_id'];?>','menu','')" <?php } ?> ><?php echo $user_menu['title'] ;?>
 														</div>
 													</div>
 													<?php
 														//$ci=& get_instance();
 														//$all_sub_menus = $ci->db->where('parent_id',$user_menu['id'])->where('status',1)->get('menu')->result_array();
-														$this->mongo_db->where(array('menu_type'=>'0','is_subadmin'=>'1','status'=>'1','parent_id'=> (string)$user_menu['id']));
+														$this->mongo_db->where(array('menu_type'=>'0','is_subadmin'=>'1','status'=>'1','parent_id'=> (string)$user_menu['_id']));
 		                                                                                                $this->mongo_db->order_by(array('title'=>'asc'));
 														$all_sub_menus = $this->mongo_db->get('menus');
 														
 														if(!empty($all_sub_menus))
 														{
 														?>
-															<div class="tree-folder-content" id="sub_tree<?php echo $user_menu['id'];?>">
+															<div class="tree-folder-content" id="sub_tree<?php echo $user_menu['_id'];?>">
 																<?php
 																	foreach($all_sub_menus as $sub_menu)
 																	{
-																	   $submenu = $this->common_model->get('user_permission',array('*'),array('user_id'=>$id,'menu_id'=>$sub_menu['id']));
+																	   $submenu = $this->common_model->get('user_permission',array('*'),array('user_id'=>$id,'menu_id'=>$sub_menu['_id']));
 																	   
 																	
 																	   
@@ -163,15 +165,15 @@
 																				<i class="fa fa-arrow-circle-right" style="vertical-align: super;"></i>
 																				<div class="tree-folder-name">
 																						
-																				<input id="submenu_<?php echo $sub_menu['id'];?>" name="submenu[]" value="<?php echo $sub_menu['id'];?>" style="width: 20px;display: inline-block;vertical-align: middle;" type="checkbox" <?php  if(isset($submenu) && (count($submenu) > 0)){echo "checked";}?>
- onclick="check_all_boxes('<?php echo $sub_menu['id']?>','item','<?php echo $user_menu['id'];?>')" ><?php echo $sub_menu['title'] ;?>		
+																				<input id="submenu_<?php echo $sub_menu['_id'];?>" name="submenu[]" value="<?php echo $sub_menu['_id'];?>" style="width: 20px;display: inline-block;vertical-align: middle;" type="checkbox" <?php  if(isset($submenu) && (count($submenu) > 0)){echo "checked";}?>
+                                                                                                                                                      onclick="check_all_boxes('<?php echo $sub_menu['_id']?>','item','<?php echo $user_menu['_id'];?>')" ><?php echo $sub_menu['title'] ;?>		
 																				</div>
 																			</div>
 																			<?php
 																			 $menu_permission = explode(',', $sub_menu['menu_permission']);
 																			 if(!empty($menu_permission))
 																			 { ?>
-																			 <div class="tree-folder-content" id="sub_tree_items<?php echo $sub_menu['id'];?>" style="display:none">
+																			 <div class="tree-folder-content" id="sub_tree_items<?php echo $sub_menu['_id'];?>" style="display:none">
 																				 <div class="tree-folder-header">
 																				 <?php
 																				echo '<div class="tree-folder-name">';
@@ -188,7 +190,7 @@
 																				  if($permissions == 3)
 																						$permiss = "Delete";
 																					?>
-																				<input id="permissions_<?php echo $permissions."_".$sub_menu['id']; ?>" name="permissions[<?php echo $sub_menu['id'];?>][]" style="width: 20px;display: inline-block;vertical-align: middle;" value="<?php echo $permissions ;?>" type="checkbox"   <?php if(in_array($permissions,$submenu_permission_add)){echo "checked";}?>   onclick="return false;" onkeydown="return false;"><?php echo $permiss; 
+																				<input id="permissions_<?php echo $permissions."_".$sub_menu['_id']; ?>" name="permissions[<?php echo $sub_menu['_id'];?>][]" style="width: 20px;display: inline-block;vertical-align: middle;" value="<?php echo $permissions ;?>" type="checkbox"   <?php if(in_array($permissions,$submenu_permission_add)){echo "checked";}?>   onclick="return false;" onkeydown="return false;"><?php echo $permiss; 
 																				}
 																				echo "</div>";
 																				?>

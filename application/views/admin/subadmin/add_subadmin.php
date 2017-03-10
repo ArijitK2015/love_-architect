@@ -102,22 +102,22 @@
 													<div class="tree-folder-header">
 														<i class="fa fa-arrow-circle-right" style="vertical-align: baseline;"></i>
 														<div class="tree-folder-name">	
-															<input id="management_<?php echo $user_menu['id'];?>" name="management[]" value="<?php echo $user_menu['id'];?>" type="checkbox"
+															<input id="management_<?php echo $user_menu['_id'];?>" name="management[]" value="<?php echo $user_menu['_id'];?>" type="checkbox"
 															
-															<?php if(isset($user_menu['is_default']) && $user_menu['is_default'] =='1'){ ?>onclick="return false;" checked <?php }else{ ?>onclick="check_all_boxes('<?php echo $user_menu['id'];?>','menu','')" <?php } ?> >
+															<?php if(isset($user_menu['is_default']) && $user_menu['is_default'] =='1'){ ?>onclick="return false;" checked <?php }else{ ?>onclick="check_all_boxes('<?php echo $user_menu['_id'];?>','menu','')" <?php } ?> >
 															&nbsp; &nbsp;<?php echo ucfirst($user_menu['title']) ;?>
 														</div>
 													</div>
 													<?php
 														$ci=& get_instance();
-														$this->mongo_db->where(array('menu_type'=>'0','is_subadmin'=>'1','status'=>'1','parent_id'=> (string)$user_menu['id']));
+														$this->mongo_db->where(array('menu_type'=>'0','is_subadmin'=>'1','status'=>'1','parent_id'=> (string)$user_menu['_id']));
 		                                                                                                $this->mongo_db->order_by(array('title'=>'asc'));
 														$all_sub_menus = $this->mongo_db->get('menus');
 														//$all_sub_menus = $ci->db->where('parent_id',$user_menu['id'])->where('status',1)->get('menu')->result_array();
 														
 														if(!empty($all_sub_menus)){
 													?>
-															<div class="tree-folder-content" id="sub_tree<?php echo $user_menu['id'];?>">
+															<div class="tree-folder-content" id="sub_tree<?php echo $user_menu['_id'];?>">
 																<?php
 																	foreach($all_sub_menus as $sub_menu)
 																	{
@@ -126,14 +126,14 @@
 																			<div class="tree-folder-header">
 																				<i class="fa fa-arrow-circle-right" style="vertical-align: super;"></i>
 																				<div class="tree-folder-name">
-																					<input id="submenu_<?php echo $sub_menu['id'];?>" name="submenu[]" value="<?php echo $sub_menu['id'];?>"  style="width: 20px;display: inline-block;vertical-align: middle;" type="checkbox" onclick="check_all_boxes('<?php echo $sub_menu['id']?>','item','<?php echo $user_menu['id'];?>')">																					
+																					<input id="submenu_<?php echo $sub_menu['_id'];?>" name="submenu[]" value="<?php echo $sub_menu['_id'];?>"  style="width: 20px;display: inline-block;vertical-align: middle;" type="checkbox" onclick="check_all_boxes('<?php echo $sub_menu['_id']?>','item','<?php echo $user_menu['id'];?>')">																					
 																					&nbsp; &nbsp;<?php echo ucfirst($sub_menu['title']) ;?>																		 </div>
 																			</div>
 																			<?php
 																				$menu_permission = explode(',', $sub_menu['menu_permission']);
 																				if(!empty($menu_permission)){ ?>
-																				<div class="tree-folder-content" name="tree-folder_<?php echo $user_menu['id'];?>"  id="sub_tree_items<?php echo $sub_menu['id'];?>">
-																					<div class="tree-item hide" id="menu_p_<?php echo $sub_menu['id']; ?>">
+																				<div class="tree-folder-content" name="tree-folder_<?php echo $user_menu['_id'];?>"  id="sub_tree_items<?php echo $sub_menu['_id'];?>">
+																					<div class="tree-item hide" id="menu_p_<?php echo $sub_menu['_id']; ?>">
 																					<?php
 																						echo '<i class="tree-dot"></i>';
 																						foreach($menu_permission as $permission)
@@ -143,7 +143,7 @@
 																							if($permission == 2) $permiss = "Edit";
 																							if($permission == 3) $permiss = "Delete";
 																				?>
-																						    <input id="management_<?php echo $sub_menu['id'].$permission; ?>" onclick="return false;" onkeydown="return false;"  name="permissions[<?php echo $sub_menu['id'] ;?>][]" value="<?php echo $permission;?>" style="width: 20px;display: inline-block;vertical-align: middle;"  type="checkbox"  >
+																						    <input id="management_<?php echo $sub_menu['id'].$permission; ?>" onclick="return false;" onkeydown="return false;"  name="permissions[<?php echo $sub_menu['_id'] ;?>][]" value="<?php echo $permission;?>" style="width: 20px;display: inline-block;vertical-align: middle;"  type="checkbox"  >
 																							&nbsp; &nbsp;<?php echo ucfirst($permiss) ;?>
 																					<?php
 																						}

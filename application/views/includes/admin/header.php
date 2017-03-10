@@ -97,11 +97,10 @@
 								<?php
 									$permission_arr 	= $permissions = array();
 									$user_id 			= ($this->session->userdata('user_id_lovearchitect')) ? $this->session->userdata('user_id_lovearchitect') : 0 ;
-									
 									$settings_det 	= $this->common_model->get('settings');
 									$site_title = isset($settings_det[0]['site_name']) ? $settings_det[0]['site_name'] : '';
 									if(!empty($cmp_auth_id))	{
-										$member_details= $this->common_model->get('membership', array(), array('_id' => (string)$user_id));
+										$member_details= $this->common_model->get('membership', array('*'), array('_id' => (string)$user_id));
 										$admin_details = $member_details;
 										if(isset($admin_details[0]) && !empty($admin_details[0]))
 											$admin_details[0]['is_sub_admin']	= isset($member_details[0]['is_sub_admin']) ? $member_details[0]['is_sub_admin'] : 0;
@@ -138,8 +137,8 @@
 									{
 										echo '<img alt="" src="'.main_base_url().'thumb.php?height=40&width=40&type=aspectratio&img='.assets_url().'admin/images/avatar1_small.jpg">';
 									}
-									
-									$is_sub_admin_stat = isset($admin_details[0]['is_subadmin']) ? $admin_details[0]['is_subadmin'] : '0';
+										
+									$is_sub_admin_stat 	= isset($admin_details[0]['is_sub_admin']) ? $admin_details[0]['is_sub_admin'] : '0';
 									//echo "hello".$is_sub_admin_stat;
 									//if($admin_details[0]['is_sub_admin'] == 1)
 									//	echo '<span class="username">'.substr($site_title, 0, 15).'</span>';
@@ -174,17 +173,20 @@
 					<div class="leftside-navigation">
 						<ul class="sidebar-menu" id="nav-accordion">
 							<?php
-							    if($is_sub_admin_stat=='0')
-								    $all_menus = $this->common_model->get('menus', array(), array('parent_id' => '0', 'menu_type' => '0', 'status' => '1'), null, null, null, null, array('_id' => 'asc'));
-								else
-								   $all_menus = $this->common_model->get('menus', array(), array('parent_id' => '0',"is_subadmin" =>'1', 'menu_type' => '0', 'status' => '1'), null, null, null, null, array('_id' => 'asc'));
+								if($is_sub_admin_stat == '0')
+									$all_menus = $this->common_model->get('menus', array(), array('parent_id' => '0', 'menu_type' => '0', 'status' => '1'), null, null, null, null, array('_id' => 'asc'));
+								else  $all_menus = $this->common_model->get('menus', array(), array('parent_id' => '0',"is_subadmin" =>'1', 'menu_type' => '0', 'status' => '1'), null, null, null, null, array('_id' => 'asc'));
 								
+								//echo "<pre>"; print_r($all_menus);die;
+								$super 		= ($is_sub_admin_stat=='0')	? 0 : 1;
+								
+								echo "hello".$super;
 								foreach($all_menus as $menus)
 								{
 									$al_menu_id	= (isset($menus['_id']))	? strval($menus['_id']) : '';
-									$all_sub_menus = $this->common_model->get('menus',  array(), array('parent_id' => $menus['id'], 'status' => '1'));
+									$all_sub_menus = $this->common_model->get('menus',  array(), array('parent_id' => $al_menu_id, 'status' => '1'));
 										
-									$super 		= ($is_sub_admin_stat)	? 1 : 0;
+									
 										
 									if(in_array($al_menu_id, $permission_arr) || $super == 0)
 									{
@@ -224,19 +226,7 @@
 								}
 							?>
 						</ul>
-						<ul class="sidebar-menu" id="dealer_menu_id" style="padding-top: 0;">
-							<?php
-								if(!empty($all_existing_menus)){
-									foreach($all_existing_menus as $menu){
-										$menu_name = ($menu['search_year']) ? $menu['search_year'].' - '.$menu['search_param'] : ucfirst($menu['search_param']);
-										$menu_name = (!empty($menu_name)) ? $menu_name : 'All cars';
-										$menu_name = (strlen($menu_name) > 20) ? substr($menu_name, 0, 20) : $menu_name;
-										
-										echo '<li><a href="'.base_url().'control/search-list/'.$menu['id'].'">'.htmlentities($menu_name).'</a></li>';
-									}
-								}
-							?>
-						</ul>
+						
 					</div>
 					<!-- sidebar menu end-->
 				</div>

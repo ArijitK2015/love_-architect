@@ -49,14 +49,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | Examples:	my-controller/index	-> my_controller/index
 |		my-controller/my-method	-> my_controller/my_method
 */
-$route['default_controller'] 								= 'welcome';
+//$route['default_controller'] 								= 'welcome';
 //$route['404_override'] 									= '';
 //$route['translate_uri_dashes'] 								= FALSE;
 
 
 //$route['default_controller'] 								= 'Home_controllers/index';
-//$route['default_controller']								= 'Customer_signup_controllers/index';
-//$route['default_controller']									= 'User/index';
+$route['default_controller']								    	= 'Customer_signup_controllers/index';
 $route['control/login'] 										= 'User/index';
 $route['(:any)/control/login'] 								= 'User/index';
 $route['login'] 									         	= 'Home_controllers/index';
@@ -346,7 +345,11 @@ $route['control/manage-jobs/edit']						        	= 'Manage_jobs_controller/updt'
 $route['(:any)/control/manage-jobs/edit']						= 'Manage_jobs_controller/updt';
 $route['control/manage-jobs/delete/(:any)']				       	= 'Manage_jobs_controller/delete';
 
-
+//Admin email template contents
+$route['control/email-template']				     			= 'Admin_email_template/index';
+$route['control/email-template/add']							= 'Admin_email_template/add';
+$route['control/email-template/edit']							= 'Admin_email_template/updt';
+$route['control/email-template/delete/(:any)']					= 'Admin_email_template/delete';
 
 //Admin SMS template contents
 $route['control/sms-template']				     			= 'Admin_sms_template/index';
@@ -365,36 +368,13 @@ $route['control/manage-merchants']								= 'Manage_merchant_controller/index';
 $route['control/manage-merchants/add']							= 'Manage_merchant_controller/add';
 $route['control/manage-merchants/edit']						   	= 'Manage_merchant_controller/updt';
 $route['control/manage-merchants/delete/(:any)']					= 'Manage_merchant_controller/delete';
-
-
-//for manage sub-admin
-$route['control/manage-subadmin'] = 'Subadmin/index';
-$route['control/manage-subadmin/(:num)'] = 'Subadmin/index';
-$route['control/user_name_chk'] = 'Subadmin/user_name_chk';
-$route['control/manage-subadmin/add'] = 'Subadmin/add';
-$route['control/manage-subadmin/edit/(:any)'] = 'Subadmin/update/$1';
-$route['control/manage-subadmin/delete/(:any)'] = 'Subadmin/delete/$1';
-$route['control/manage-subadmin/search/(:any)/:num'] = 'Subadmin/search';
-
-$route['control/manage-subadmin/change_status'] = 'Subadmin/change_status';
 //End
-
-//Admin email template contents
-$route['control/email-template']				     			= 'Admin_email_template/index';
-$route['control/email-template/add']							= 'Admin_email_template/add';
-$route['control/email-template/edit']							= 'Admin_email_template/updt';
-$route['control/email-template/delete/(:any)']					= 'Admin_email_template/delete';
-
-//Admin Category Managements 
-$route['control/category-manage']				     			= 'Manage_category/index';
-$route['control/category-manage/add']							= 'Manage_category/add';
-$route['control/category-manage/edit']							= 'Manage_category/updt';
-$route['control/category-manage/delete/(:any)']					= 'Manage_category/delete';
-
-
 
 $route['uber_rush_api_check']									= 'Customer_signup_controllers/uber_rush_api_check';
 $route['(:any)/uber_rush_api_check']							= 'Customer_signup_controllers/uber_rush_api_check';
+
+$route['starkcore_api_check']									= 'Customer_signup_controllers/starkcore_api_check';
+$route['(:any)/starkcore_api_check']							= 'Customer_signup_controllers/starkcore_api_check';
 
 $route['customer-signup-submit']								= 'Customer_signup_controllers/customer_signup_submit';
 $route['(:any)/customer-signup-submit']							= 'Customer_signup_controllers/customer_signup_submit';
