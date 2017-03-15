@@ -129,28 +129,7 @@
 																					<input id="submenu_<?php echo $sub_menu['_id'];?>" name="submenu[]" value="<?php echo $sub_menu['_id'];?>"  style="width: 20px;display: inline-block;vertical-align: middle;" type="checkbox" onclick="check_all_boxes('<?php echo $sub_menu['_id']?>','item','<?php echo $user_menu['id'];?>')">																					
 																					&nbsp; &nbsp;<?php echo ucfirst($sub_menu['title']) ;?>																		 </div>
 																			</div>
-																			<?php
-																				$menu_permission = explode(',', $sub_menu['menu_permission']);
-																				if(!empty($menu_permission)){ ?>
-																				<div class="tree-folder-content" name="tree-folder_<?php echo $user_menu['_id'];?>"  id="sub_tree_items<?php echo $sub_menu['_id'];?>">
-																					<div class="tree-item hide" id="menu_p_<?php echo $sub_menu['_id']; ?>">
-																					<?php
-																						echo '<i class="tree-dot"></i>';
-																						foreach($menu_permission as $permission)
-																						{
-																							if($permission == 0) $permiss = "Listing";
-																							if($permission == 1) $permiss = "Add";
-																							if($permission == 2) $permiss = "Edit";
-																							if($permission == 3) $permiss = "Delete";
-																				?>
-																						    <input id="management_<?php echo $sub_menu['id'].$permission; ?>" onclick="return false;" onkeydown="return false;"  name="permissions[<?php echo $sub_menu['_id'] ;?>][]" value="<?php echo $permission;?>" style="width: 20px;display: inline-block;vertical-align: middle;"  type="checkbox"  >
-																							&nbsp; &nbsp;<?php echo ucfirst($permiss) ;?>
-																					<?php
-																						}
-																					?>
-																					</div>
-																				</div>
-																		<?php	} ?>
+																		
 																		</div>
 															<?php	} ?>
 															</div>

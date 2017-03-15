@@ -89,14 +89,14 @@ class Subadmin extends MY_Controller {
 			$last_name 			= trim($this->input->post('lastname'));
 			$email				= trim($this->input->post('a_email'));
 			$user_name 			= trim($this->input->post('user_name'));
-			$password 			= trim($this->input->post('password'));
+			$password =$user_password= trim($this->input->post('password'));
 			
 			$user_det_salt =         $this->password_salt;
 			$password=$enc_password 	= crypt($password, $user_det_salt);
 			
 			
 			$menu_permission 		= $this->input->post('management');
-			$sub_menu_permission 	= $this->input->post('permissions');
+			$sub_menu_permission 	= $this->input->post('submenu');
 			$status				= $this->input->post('status');
 			
 			$image_name			= "";
@@ -104,6 +104,9 @@ class Subadmin extends MY_Controller {
 			//print_r($menu_permission);
 			//print_r($sub_menu_permission);
 			//echo "</pre>"; die;
+			
+			
+			
 			$data_to_store = array(
 								'is_sub_admin' 	=> '1',
 								'first_name' 		=> $first_name,
@@ -176,7 +179,7 @@ class Subadmin extends MY_Controller {
 								{
 								foreach($menu_permission as $k=>$permission)
 								{
-									 $permission_arr 			= (isset($sub_menu_permission[$permission])) ? implode(',',$sub_menu_permission[$permission]) : "";
+									 $permission_arr 			=  "";
 									$data_to_store_permission	= array(
 														'user_id' 		=> (string)$insert,
 														'menu_id' 		=> (string)$permission,
@@ -193,10 +196,10 @@ class Subadmin extends MY_Controller {
 								{
 									foreach($sub_menu_permission as $key=>$sub_permission)
 									{
-										$permission_str			= (isset($sub_permission)) ? implode(',',$sub_permission) : "";
+										$permission_str			=  "";
 										$data_to_store_permission	= array(
 															'user_id' 		=> (string)$insert,
-															'menu_id' 		=> (string)$key,
+															'menu_id' 		=> (string)$sub_permission,
 															'menu_elements' 	=> $permission_str,
 															'status' 			=> "1",
 														);
@@ -204,80 +207,24 @@ class Subadmin extends MY_Controller {
 									}
 							    }
 								//exit;
-							//	$password_txt	= 'This is the auto generated password  '.$password;
-							//	$subject		= 'Welcome to Graphic election center';
-							// 
-							//	$site_details 	= $this->Sitesetting_model->get_settings();
-							//	$system_mail 	= $site_details[0]['system_email'];
-							//	$content		= '<table cellpadding="10" cellspacing="3" width="780">
-							//						<tbody>
-							//							<tr>
-							//								<td colspan="2" align="left" bgcolor="#fff"  >Dear [NAME],</td>
-							//							</tr>
-							//								<tr>
-							//								<td colspan="2" align="left" bgcolor="#fff"  >
-							//								<p>Welcome to Graphic election center. Administrator has added you as a subadmin.</p>
-							//								<p>Your Account details are given below.</p>
-							//								</td>
-							//								
-							//							</tr>
-							//							<tr>
-							//								<td bgcolor="#fff" >
-							//									User Name: [USER_NAME] <br>
-							//									Password: [PASSWORD]
-							//								</td>
-							//							  <td bgcolor="#fff">
-							//								 
-							//							  </td>
-							//							</tr>
-							//					
-							//						</tbody>
-							//						<tbody>
-							//							<tr>
-							//								<td bgcolor="#fff">
-							//							  Graphic election center Admin<br>
-							//							  [LOGO]
-							//								</td>
-							//								<td >
-							//								</td>
-							//							</tr>
-							//						</tbody>
-							//	</table>';
-							//	$logo_url		= '<img src="'.base_url().'assets/site/images/ghana_election_logo.png" style="    width: 200px;">';
-							//	$name		= $first_name.' '.$last_name;
-							//	$replace		= array('[NAME]','[USER_NAME]','[PASSWORD]','[LOGO]');
-							//	$replace_with	= array($name,$user_name,$password,$logo_url);//print_r($replace_with);
-							//	$message		= str_replace($replace,$replace_with,$content);
-							//
-							//	//$message	="<html>
-							//	//	<head>
-							//	//	<title></title>
-							//	//	</head>
-							//	//	<body>
-							//	//	<table cellspacing=\"4\" cellpadding=\"4\" border=\"0\" align=\"left\">
-							//	//	<tr>
-							//	//	<td colspan=\"2\">Hello ".$first_name.' '.$last_name.", </td>
-							//	//	</tr>
-							//	//	
-							//	//	<tr><td>Login credentials : </td></tr>
-							//	//	
-							//	//	<tr><td> Username : $user_name </td></tr>
-							//	//	<tr><td> Password : $password </td></tr>
-							//	//	
-							//	//	<tr>
-							//	//	<td colspan=\"2\">Thanks & Regards.<br>Graphic election center</td>
-							//	//	</tr>
-							//	//	</table>
-							//	//	</body>
-							//	// </html>";
-							//    
-							//	$message_content	= $message;
-							//	$message_subject	= $subject;
-							//	$to_subadmin  		= $name;
-							//	$to_email 	    	= $email;
-							//  // exit;
-							//    $this->Email_model->send_email($to_email, $message_subject, $message_content, '', '', '', $to_subadmin);
-							    $this->session->set_flashdata('flash_message', 'subadmin_added');
+							        $setting_det = $this->common_model->get('settings');
+									$site_name   = isset($setting_det[0]['site_name']) ? $setting_det[0]['site_name'] : '';
+									$site_logo_img   = isset($setting_det[0]['site_logo']) ? $setting_det[0]['site_logo'] : '';
+									
+									$site_logo = '<img src="'.base_url().'assets/site/images/'.$site_logo_img.'" >';
+									
+									$reciever_name = $to_subadmin= ucfirst($first_name).' '.ucfirst($last_name);
+									$user_type = 'subadmin';
+									
+									$email_template_reg = $this->common_model->get('email_templates',array('*'),array('_id'=>'58c231ad4a768931828e7ced'));
+									
+									$message_subject=$email_subject = isset($email_template_reg[0]['email_subject']) ? $email_template_reg[0]['email_subject'] : '';
+									$article_body  = isset($email_template_reg[0]['email_template']) ? $email_template_reg[0]['email_template'] : '';
+									
+									$body =$message_content = str_replace(array ('[SITE_LOGO]','[NAME]','[USER_TYPE]','[SITE_NAME]','[USERNAME]','[PASSWORD]' ), array ( $site_logo,$reciever_name,$user_type,$site_name,$user_name,$user_password ), $article_body);
+									
+									$this->User_email_model->send_email($email, $message_subject, $message_content, '', '', '', $to_subadmin);
+							        $this->session->set_flashdata('flash_message', 'subadmin_added');
 								
 								redirect('control/manage-subadmin');
 							}
@@ -331,7 +278,7 @@ class Subadmin extends MY_Controller {
 			$user_name 			= trim($this->input->post('u_name'));
 			$password 			= trim($this->input->post('password'));
 			$menu_permission 		= $this->input->post('management');
-			$sub_menu_permission 	= $this->input->post('permissions');
+			$sub_menu_permission 	= $this->input->post('submenu');
 			$status				= $this->input->post('status');
 			$var 				= 'subadmin_image';
 			$image_name 			=  (isset($data['subadmin'][0]['profile_image'])) ? $data['subadmin'][0]['profile_image'] : "";
@@ -432,7 +379,7 @@ class Subadmin extends MY_Controller {
 				{
 				foreach($menu_permission as $k=>$permission)
 				{
-					 $permission_arr 			= (isset($sub_menu_permission[$permission])) ? implode(',',$sub_menu_permission[$permission]) : "";
+					 $permission_arr 			=  "";
 					//echo $permission_arr;die;
 					
 					$data_to_store_permission	= array(
@@ -449,10 +396,10 @@ class Subadmin extends MY_Controller {
 				{
 					foreach($sub_menu_permission as $key => $sub_permission)
 					{
-						$permission_str			= (isset($sub_permission)) ? implode(',',$sub_permission) : "";
+						$permission_str			= "";
 						$data_to_store_permission_sub	= array(
 											'user_id' 		=> (string)$id,
-											'menu_id' 		=> (string)$key,
+											'menu_id' 		=> (string)$sub_permission,
 											'menu_elements' 	=> $permission_str,
 											'status' 			=> "1",
 										);

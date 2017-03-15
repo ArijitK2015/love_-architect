@@ -366,6 +366,12 @@ $route['control/manage-merchants/add']							= 'Manage_merchant_controller/add';
 $route['control/manage-merchants/edit']						   	= 'Manage_merchant_controller/updt';
 $route['control/manage-merchants/delete/(:any)']					= 'Manage_merchant_controller/delete';
 
+//For questions management
+$route['control/manage-questions']								= 'Questions_controller/index';
+$route['control/manage-questions/add']							= 'Questions_controller/add';
+$route['control/manage-questions/edit/(:any)']				   	= 'Questions_controller/updt';
+$route['control/manage-questions/delete/(:any)']					= 'Questions_controller/delete';
+
 
 //for manage sub-admin
 $route['control/manage-subadmin'] = 'Subadmin/index';
