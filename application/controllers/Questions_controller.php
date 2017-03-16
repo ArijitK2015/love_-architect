@@ -187,8 +187,8 @@ class Questions_controller extends MY_Controller {
 			
 			    if($update)
 				{
-					 $this->common_model->delete('question_answers',array('question_id'=>(string)$id));
-					
+					// $this->common_model->delete('question_answers',array('question_id'=>(string)$id));
+					$this->common_model->update('question_answers',array("is_deleted" => "1"),array('question_id'=>(string)$id));
 					
 					if($this->input->post('type_id') == 1 )
 					{
@@ -198,6 +198,7 @@ class Questions_controller extends MY_Controller {
 												  'ans_type'    => strval($this->input->post('type_id')),
 												  'title'       => strval($this->input->post('option_title_txt')), 
 												  'score'       => strval($this->input->post('option_val_txt')),
+												  "is_deleted" => "0"
 												  );
 					    $insert_question_answers 	= $this->mongo_db->insert('question_answers', $data_to_store_qu_ans);
 						
@@ -215,6 +216,7 @@ class Questions_controller extends MY_Controller {
 													  'ans_type'    => strval($this->input->post('type_id')),
 													  'title'       => strval($v), 
 													  'score'       => strval($option_value[$k]),
+													  "is_deleted" => "0"
 													  );
 							$insert_question_answers 	= $this->mongo_db->insert('question_answers', $data_to_store_qu_ans);
 							
