@@ -219,7 +219,7 @@ $category_id="";
 										<div class="col-lg-6">
 											<select required name="status" id="status" style="width:330px"  class=" form-control">
 												<option value="1"<?php if(isset($question_det[0]['status']) && $question_det[0]['status']==1 ) echo 'selected';   ?>>Active</option>
-												<option value="0"<?php if(isset($question_det[0]['status']) && $question_det[0]['status']==0 ) echo 'selected';   ?>>Inctive</option>
+												<option value="0"<?php if(isset($question_det[0]['status']) && $question_det[0]['status']==0 ) echo 'selected';   ?>>Inactive</option>
 											</select>
 										</div>
 									</div>

@@ -158,7 +158,7 @@ $category_id="";
 										<div class="col-lg-6">
 											<select required name="status" id="status" style="width:330px"  class=" form-control">
 												<option value="1">Active</option>
-												<option value="0">Inctive</option>
+												<option value="0">Inactive</option>
 											</select>
 										</div>
 									</div>

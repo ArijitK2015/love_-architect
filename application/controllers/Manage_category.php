@@ -14,7 +14,7 @@ class Manage_category extends MY_Controller {
 	*/
 	public function index()
 	{ 
-		$data['info'] = $this->common_model->get('categories');
+		$data['info'] = $this->common_model->get('categories',array('*'),array("is_deleted" => "0"));
 	
 	    //echo "<pre>"; print_r($data['info']);die;
 	
@@ -41,7 +41,7 @@ class Manage_category extends MY_Controller {
 					'details' => $this->input->post('details'),
 					'added_on' => date('Y-m-d H:i:s'),
 					'status'  => (string)$this->input->post('status'),
-					
+					"is_deleted" => "0"
 				);
             $add= $this->common_model->add('categories',$data_to_store);
            
@@ -155,9 +155,14 @@ class Manage_category extends MY_Controller {
 		
 		
 		$id = $user_id=$this->uri->segment(4);
+		$data_to_update = array(
+								"is_deleted" => "1",
+								
+								);
+        if($this->common_model->update('categories',$data_to_update,array('_id'=>(string)$id)) == TRUE )
+		{   $this->common_model->update('questions',$data_to_update,array('category_id'=>(string)$id));
+		    $this->common_model->update('question_answers',$data_to_update,array('category_id'=>(string)$id)); 
 		
-        if($this->common_model->delete('categories',array('_id'=>(string)$id)) == TRUE )
-		{
 			$this->session->set_flashdata('flash_message', 'pages_deleted');
 		}
 		else
