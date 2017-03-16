@@ -13,22 +13,25 @@ class Questions_controller extends MY_Controller {
 	*/
 	public function index()
 	{
+		
 		$data['data']					= $this->data;
 		$user_id = ($this->session->userdata('user_id_lovearchitect')) ?  $this->session->userdata('user_id_lovearchitect') : 1;
 		
-		if(!empty($this->cmp_auth_id))
-			$admin_details 			= $this->myaccount_model->get_account_data($user_id, 1);
-		else
-			$admin_details 			= $this->myaccount_model->get_account_data($user_id);
+		//if(!empty($this->cmp_auth_id))
+		//	$admin_details 			= $this->myaccount_model->get_account_data($user_id, 1);
+		//else
+		//	$admin_details 			= $this->myaccount_model->get_account_data($user_id);
 			
-		$data['data']['setting_data'] 	= $admin_details;
+		$setting_data 					= $this->myaccount_model->get_account_data($user_id);
+		$data['data']['setting_data'] 	= $setting_data;
 		$data['data']['settings'] 		= $this->sitesetting_model->get_settings();
 		$data['data']['dealer_id'] 		= $user_id;
 			
-		//jobs data 
-		$data['data']['myaccount_data'] 	= $admin_details;
-		
+		//settings data 
+		$data['data']['myaccount_data'] 	= $this->myaccount_model->get_account_data($user_id);
+		//echo "hello";die;
 		//$this->mongo_db->where(array('status' => '1'));
+		$this->mongo_db->where(array('is_deleted' => '0'));
 		$this->mongo_db->order_by(array('title' => 'asc'));
 			
 		$all_contents 					= $this->mongo_db->get('questions');
@@ -36,15 +39,15 @@ class Questions_controller extends MY_Controller {
 		foreach($all_contents as $k=>$v)
 		{
 			$category_id= isset($v['category_id']) ? $v['category_id'] :'';
-			$category_det = $this->common_model->get('categories',array('*'),array('_id'=>(string)$category_id));
+			$category_det = $this->common_model->get('categories',array('*'),array('_id'=>(string)$category_id,"is_deleted" => "0"));
 			
 			
 			
 			$all_contents[$k]['category_title'] = isset($category_det[0]['title']) ? $category_det[0]['title'] : '';
 			
 		}
+		//echo "<pre>";print_r($all_contents);die;
 		
-		//echo "<pre>"; print_r($all_contents); die;
 		
 		$data['data']['all_contents'] 	= $all_contents;
 		
@@ -85,9 +88,10 @@ class Questions_controller extends MY_Controller {
 								'category_id' 		=> strval($this->input->post('category_id')),
 								'title' 		=> strval($this->input->post('ques_title')),
 								'ans_type' 	=> strval($this->input->post('type_id')),
-								
+								'is_required' => strval($this->input->post('is_required')),
 								'added_on'		=> date("Y-m-d H:i:s"),
-								'status' 			=> strval($this->input->post('status'))
+								'status' 			=> strval($this->input->post('status')),
+								"is_deleted" => "0"
 							);
 				
 				$insert 	= $this->mongo_db->insert('questions', $data_to_store);
@@ -98,9 +102,11 @@ class Questions_controller extends MY_Controller {
 					{
 						$data_to_store_qu_ans = array(
 												  'question_id' => (string)$insert,
+												  'category_id' 		=> strval($this->input->post('category_id')),
 												  'ans_type'    => strval($this->input->post('type_id')),
 												  'title'       => strval($this->input->post('option_title_txt')), 
 												  'score'       => strval($this->input->post('option_val_txt')),
+												  "is_deleted" => "0"
 												  );
 					    $insert_question_answers 	= $this->mongo_db->insert('question_answers', $data_to_store_qu_ans);
 						
@@ -114,9 +120,11 @@ class Questions_controller extends MY_Controller {
 					{
 						$data_to_store_qu_ans = array(
 												  'question_id' => (string)$insert,
+												  'category_id' 		=> strval($this->input->post('category_id')),
 												  'ans_type'    => strval($this->input->post('type_id')),
 												  'title'       => strval($v), 
 												  'score'       => strval($option_value[$k]),
+												  "is_deleted" => "0"
 												  );
 					    $insert_question_answers 	= $this->mongo_db->insert('question_answers', $data_to_store_qu_ans);
 						
@@ -169,7 +177,7 @@ class Questions_controller extends MY_Controller {
 								'category_id' 		=> strval($this->input->post('category_id')),
 								'title' 		=> strval($this->input->post('ques_title')),
 								'ans_type' 	=> strval($this->input->post('type_id')),
-								
+								'is_required' => strval($this->input->post('is_required')),
 								
 								'status' 			=> strval($this->input->post('status'))
 							);
@@ -186,6 +194,7 @@ class Questions_controller extends MY_Controller {
 					{
 						$data_to_store_qu_ans = array(
 												  'question_id' => (string)$id,
+												  'category_id' 		=> strval($this->input->post('category_id')),
 												  'ans_type'    => strval($this->input->post('type_id')),
 												  'title'       => strval($this->input->post('option_title_txt')), 
 												  'score'       => strval($this->input->post('option_val_txt')),
@@ -202,6 +211,7 @@ class Questions_controller extends MY_Controller {
 						{
 							$data_to_store_qu_ans = array(
 													  'question_id' => (string)$id,
+													  'category_id' 		=> strval($this->input->post('category_id')),
 													  'ans_type'    => strval($this->input->post('type_id')),
 													  'title'       => strval($v), 
 													  'score'       => strval($option_value[$k]),
@@ -247,7 +257,7 @@ class Questions_controller extends MY_Controller {
 		$data['question_det'] 	= $edit_contents;
 		
 		$data['ans_type_id'] 	= $ans_type_id;
-		$data['question_ans_det'] = $this->common_model->get('question_answers',array('*'),array('ans_type'=>$ans_type_id,'question_id'=>(string)$question_id,));
+		$data['question_ans_det'] = $this->common_model->get('question_answers',array('*'),array('ans_type'=>$ans_type_id,'question_id'=>(string)$question_id,"is_deleted" => "0"));
 		//echo "<pre>";print_r($data['question_ans_det']);die;
 		
 		$data['view_link'] 				= 'admin/questions/edit_question';
@@ -272,9 +282,10 @@ class Questions_controller extends MY_Controller {
 		$field_id 					= $this->uri->segment(4);
 		
 		//deleting query
-		$this->mongo_db->where(array('_id' => $field_id));
-		if(($this->mongo_db->delete('questions'))== TRUE && ($this->common_model->delete('question_answers',array('question_id'=>(string)$field_id))) == TRUE){
-			$this->session->set_flashdata('flash_message', 'delete_success');
+	
+			
+		if($this->common_model->update('questions',array("is_deleted" => "1"),array('_id' => $field_id)) ==TRUE && $this->common_model->update('question_answers',array("is_deleted" => "1"),array('question_id'=>(string)$field_id)) == TRUE)	
+		{	$this->session->set_flashdata('flash_message', 'delete_success');
 			redirect('control/manage-questions');
 		}
 		else{

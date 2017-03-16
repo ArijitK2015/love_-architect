@@ -32,8 +32,12 @@ class Manage_category extends MY_Controller {
         
         if ($this->input->server('REQUEST_METHOD') === 'POST')
         {
+			
+			$alias= $this->Url_generator_model->title_generate($this->input->post('title'));
+			
             $data_to_store = array(
 					'title' => trim($this->input->post('title')),
+					'alias' => $alias,  
 					'details' => $this->input->post('details'),
 					'added_on' => date('Y-m-d H:i:s'),
 					'status'  => (string)$this->input->post('status'),

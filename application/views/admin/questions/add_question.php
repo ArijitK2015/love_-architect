@@ -119,6 +119,17 @@ $category_id="";
 								
 						  </div>
 						  
+						  <div class="form-group ">
+										<label for="firstname" class="control-label col-lg-3">Is Required:</label>
+										<div class="col-lg-1">
+											
+										    <input type="checkbox" class="form-control" name="is_required" id="is_required" value="1"  >
+										 
+										</div>
+										
+									</div>
+						  
+						  
 						  <div class="row" id="txtbox_div" style="padding: 26px;border: 1px solid #d6cbcb;margin: 40px;" >
 						         <div class="col-sm-12" id="more_opt_sec">
 								<div class="row" id="more_opt1" >

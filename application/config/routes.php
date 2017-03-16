@@ -385,6 +385,20 @@ $route['control/manage-subadmin/search/(:any)/:num'] = 'Subadmin/search';
 $route['control/manage-subadmin/change_status'] = 'Subadmin/change_status';
 //End
 
+//for manage Users
+$route['control/manage-users'] = 'Manage_users/index';
+$route['control/manage-users/(:num)'] = 'Manage_users/index';
+$route['control/manage-users/user_name_chk'] = 'Manage_users/user_name_chk';
+$route['control/manage-users/add'] = 'Manage_users/add';
+$route['control/manage-users/edit/(:any)'] = 'Manage_users/update/$1';
+$route['control/manage-users/delete/(:any)'] = 'Manage_users/delete/$1';
+$route['control/manage-users/search/(:any)/:num'] = 'Manage_users/search';
+
+$route['control/manage-users/change_status'] = 'Manage_users/change_status';
+
+
+
+
 //Admin email template contents
 $route['control/email-template']				     			= 'Admin_email_template/index';
 $route['control/email-template/add']							= 'Admin_email_template/add';

@@ -33,13 +33,15 @@ class MY_Controller extends CI_Controller {
 		$this->load->model('common_model');
 		$this->load->model('sitesetting_model');
 		$this->load->model('Users_model');
+		
 		$this->load->model('myaccount_model');
-		$this->load->model('email_template_model');
 		$this->load->model('Subadmin_model');
 		$this->load->model('Home_model');
 		$this->load->model('User_email_model');
 		$this->load->library('ImageThumb');
-			
+		$this->load->model('Question_answere_model');
+		$this->load->model('Url_generator_model');
+		
 		$this->password_salt 	= $this->config->item('encryption_key');
 		$this->password_salt 	= ($this->password_salt) ? $this->password_salt : '12345678';
 			
@@ -120,10 +122,20 @@ class MY_Controller extends CI_Controller {
 			$this->data['admin_details']	= $admin_details;
 		}
 			
-		if(!$this->session->userdata('is_logged_in')){
-			$this->data['settings'] 		= $this->sitesetting_model->get_settings();
-			$data					= $this->data;
-			$this->load->view('admin/login', $data);	
+		$is_control	= $this->uri->segment(1);	
+			
+		if($is_control == 'control')
+		{
+			if(!$this->session->userdata('is_logged_in')){
+					
+				if(($this->class_name != 'User'))
+					redirect('control');
+				else{
+					$this->data['settings'] 		= $this->sitesetting_model->get_settings();
+					$data					= $this->data;
+					$this->load->view('admin/login', $data);
+				}
+			}
 		}
 	}
 }

@@ -97,6 +97,17 @@ $category_id="";
 									   </div>
 								    </div>
 									
+									<div class="form-group ">
+										<label for="firstname" class="control-label col-lg-3">Is Required:</label>
+										<div class="col-lg-1">
+											
+										    <input type="checkbox" class="form-control" name="is_required" id="is_required" value="1"<?php if(isset($question_det[0]['is_required']) && $question_det[0]['is_required']=='1') echo 'checked';  ?>  >
+										 
+										</div>
+										
+									</div>
+									
+									
 						<?php
                         $allFields=$question_ans_det;
                         
@@ -181,7 +192,7 @@ $category_id="";
 								<div class="row" id="more_opt1" >
 									<div class="col-sm-12">
 										<label for="option_title_txt" class="control-label col-lg-2">Label:</label>
-										<input type="text" placeholder="Label" class="inp-form" name="option_title_txt" id="option_title_txt" value="<?php echo isset($allFields[0]['title']) ? $allFields[0]['title'] :''; ?>" required >
+										<input type="text" placeholder="Label" class="inp-form" name="option_title_txt" id="option_title_txt" value="<?php echo isset($allFields[0]['title']) ? htmlentities($allFields[0]['title']) :''; ?>" required >
 										<br>
 										
 										
